@@ -1,0 +1,55 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ===== 数据库 =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== Node / Frontend =====
+node_modules/
+npm-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ===== 调试/测试临时文件 =====
+_debug_templates/
+_test_*.js
+_test_*.py
+_check*.py
+_scan*.py
+_extract*.py
+_final*.py
+_pw_*.js
+_pw_*.png
+_pw_*.jpg
+_dbg.*
+_tmp*
+_temp*
+
+# ===== 日志 =====
+*.log
+
+# ===== 环境变量（如果以后有 .env） =====
+.env
+.env.local
+.env.*.local

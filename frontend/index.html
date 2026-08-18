@@ -1,0 +1,2094 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全环保工作监督系统 · 水泥企业</title>
+<link rel="stylesheet" href="/libs/element-plus.css?v=1787016030">
+<style>
+:root{
+  --primary:#1d5fa4;--primary-light:#2e7ec9;--primary-dark:#144477;
+  --success:#16a34a;--warning:#f59e0b;--danger:#dc2626;
+  --bg:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
+  --text:#1e293b;--text-2:#475569;--text-3:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body,#app{height:100%;font-family:-apple-system,"Microsoft YaHei","PingFang SC","Helvetica Neue",sans-serif;color:var(--text)}
+body{background:var(--bg)}
+
+/* ====== 登录页 ====== */
+.login-wrap{
+  height:100vh;background:linear-gradient(135deg,#0f2540 0%,#1d5fa4 50%,#2e7ec9 100%);
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;
+}
+.login-wrap::before{
+  content:"";position:absolute;inset:0;background:
+    radial-gradient(circle at 20% 30%,rgba(255,255,255,.08) 0,transparent 40%),
+    radial-gradient(circle at 80% 70%,rgba(255,255,255,.06) 0,transparent 40%);
+}
+.login-card{
+  background:#fff;border-radius:16px;padding:48px 44px;width:420px;
+  box-shadow:0 25px 70px rgba(0,0,0,.35);position:relative;z-index:1;
+}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo .logo-icon{
+  width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  border-radius:14px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:28px;font-weight:700;letter-spacing:-1px;
+  box-shadow:0 8px 20px rgba(29,95,164,.4);
+}
+.login-logo h1{font-size:20px;color:var(--text);letter-spacing:.5px}
+.login-logo p{font-size:13px;color:var(--text-3);margin-top:6px}
+.login-card .el-form-item{margin-bottom:22px}
+.login-card .el-input__wrapper{border-radius:8px!important;box-shadow:0 0 0 1px #e2e8f0 inset!important}
+.login-card .el-input__wrapper.is-focus{box-shadow:0 0 0 2px var(--primary) inset!important}
+.login-btn{
+  width:100%;height:44px;border-radius:8px;font-size:15px;font-weight:500;
+  background:linear-gradient(135deg,var(--primary),var(--primary-light))!important;
+  border:none!important;
+}
+.login-tip{text-align:center;font-size:12px;color:var(--text-3);margin-top:18px}
+.login-tip span{color:var(--primary);cursor:pointer;margin:0 4px}
+
+/* ====== 主布局 ====== */
+.layout{height:100vh;display:flex;overflow:hidden}
+.sidebar{
+  width:228px;background:linear-gradient(180deg,#0f2540 0%,#163a63 100%);
+  color:#fff;display:flex;flex-direction:column;flex-shrink:0;
+}
+.sidebar-brand{
+  padding:20px 22px;border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;gap:12px;
+}
+.sidebar-brand .logo-mini{
+  width:36px;height:36px;background:linear-gradient(135deg,var(--primary-light),#5da8f0);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.sidebar-brand .brand-text h2{font-size:14px;font-weight:600;line-height:1.3}
+.sidebar-brand .brand-text p{font-size:11px;opacity:.6;margin-top:2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:14px 10px}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;
+  cursor:pointer;font-size:14px;color:rgba(255,255,255,.75);margin-bottom:2px;transition:all .2s;
+}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav-item.active{
+  background:linear-gradient(135deg,var(--primary-light),var(--primary));color:#fff;
+  box-shadow:0 4px 12px rgba(46,126,201,.35);
+}
+.nav-item .icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;background:var(--danger);color:#fff;font-size:11px;
+  padding:1px 7px;border-radius:10px;min-width:18px;text-align:center;
+}
+.sidebar-footer{
+  padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);
+  font-size:11px;opacity:.55;text-align:center;
+}
+
+/* 顶部条 */
+.topbar{
+  height:56px;background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 24px;flex-shrink:0;
+}
+.topbar .page-title{font-size:16px;font-weight:600;color:var(--text)}
+.topbar .page-sub{font-size:12px;color:var(--text-3);margin-left:10px}
+.topbar-spacer{flex:1}
+.top-user{display:flex;align-items:center;gap:12px}
+.top-user .el-avatar{background:var(--primary-light)!important;font-size:14px}
+.top-user .who{text-align:right;line-height:1.2}
+.top-user .who .name{font-size:13px;font-weight:500;color:var(--text)}
+.top-user .who .role{font-size:11px;color:var(--text-3)}
+.top-user .el-dropdown-link{cursor:pointer;display:flex;align-items:center;gap:8px}
+
+/* 内容区 */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column;background:var(--bg)}
+.content{flex:1;overflow-y:auto;padding:22px 26px}
+.content::-webkit-scrollbar{width:8px}
+.content::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+
+/* ====== 通用卡片 ====== */
+.card{
+  background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);
+  border:1px solid var(--border);
+}
+.card-header{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-header h3{font-size:15px;font-weight:600;color:var(--text)}
+.card-body{padding:20px}
+
+/* ====== Dashboard ====== */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px}
+.stat-card{
+  background:#fff;border-radius:12px;padding:20px 22px;border:1px solid var(--border);
+  position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.stat-card .icon-bg{
+  position:absolute;right:-18px;top:-18px;width:78px;height:78px;border-radius:50%;opacity:.12;
+}
+.stat-card .s-label{font-size:13px;color:var(--text-2);font-weight:500}
+.stat-card .s-value{font-size:32px;font-weight:700;margin-top:6px;letter-spacing:-1px}
+.stat-card .s-unit{font-size:14px;color:var(--text-3);margin-left:3px;font-weight:400}
+.stat-card .s-foot{font-size:12px;margin-top:8px;color:var(--text-3)}
+.stat-card .s-foot.up{color:var(--success)}
+.stat-card .s-foot.down{color:var(--danger)}
+.stat-card.blue{border-left:4px solid var(--primary)}
+.stat-card.blue .icon-bg{background:var(--primary)}
+.stat-card.blue .s-value{color:var(--primary)}
+.stat-card.green{border-left:4px solid var(--success)}
+.stat-card.green .icon-bg{background:var(--success)}
+.stat-card.green .s-value{color:var(--success)}
+.stat-card.orange{border-left:4px solid var(--warning)}
+.stat-card.orange .icon-bg{background:var(--warning)}
+.stat-card.orange .s-value{color:var(--warning)}
+.stat-card.red{border-left:4px solid var(--danger)}
+.stat-card.red .icon-bg{background:var(--danger)}
+.stat-card.red .s-value{color:var(--danger)}
+
+.chart-row{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:22px}
+.chart-box{height:300px}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* 列表 */
+.mini-list .list-item{
+  display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed #edf2f7;
+}
+.mini-list .list-item:last-child{border-bottom:none}
+.mini-list .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mini-list .txt{flex:1;min-width:0}
+.mini-list .txt .t1{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-list .txt .t2{font-size:11px;color:var(--text-3);margin-top:3px}
+.mini-list .tag{flex-shrink:0}
+
+/* 表格页通用 */
+.page-head{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;
+}
+.page-head h2{font-size:18px;font-weight:700;color:var(--text)}
+.page-head .sub{font-size:13px;color:var(--text-3);margin-top:4px}
+.filter-bar{
+  background:#fff;border-radius:12px;padding:16px 20px;border:1px solid var(--border);
+  margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+}
+.filter-bar .el-form-item{margin-bottom:0}
+.filter-bar .grow{flex:1}
+
+/* 进度条样式 */
+.progress-bar{
+  height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden;min-width:80px;
+}
+.progress-bar .fill{height:100%;border-radius:4px;transition:width .4s}
+
+/* 状态标签 */
+.tag-green{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.tag-orange{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.tag-red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.tag-blue{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe}
+.tag-gray{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+
+/* 法规依据样式 */
+.law-basis{
+  background:#f8fafc;border-left:3px solid var(--primary);
+  padding:8px 12px;font-size:12px;color:var(--text-2);border-radius:0 6px 6px 0;
+  margin-top:6px;line-height:1.6;
+}
+
+/* 小细节 */
+.el-table th.el-table__cell{background:#f8fafc!important;color:var(--text-2);font-weight:600}
+.el-button--primary{background:var(--primary)!important;border-color:var(--primary)!important}
+.el-button--primary:hover{background:var(--primary-light)!important;border-color:var(--primary-light)!important}
+.el-menu--horizontal{border-bottom:none!important}
+
+/* 隐患级别 */
+.level-major{background:linear-gradient(135deg,#dc2626,#f87171);color:#fff;border:none}
+.level-general{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;border:none}
+
+/* 空状态 */
+.empty{
+  text-align:center;padding:60px 20px;color:var(--text-3);
+}
+.empty .icon{font-size:48px;margin-bottom:12px;opacity:.4}
+.empty .txt{font-size:14px}
+
+/* 打印用 */
+@media print{
+  .sidebar,.topbar,.filter-bar,.no-print{display:none!important}
+  .content{padding:0;background:#fff;overflow:visible}
+  .card{box-shadow:none;border:1px solid #ddd}
+}
+
+/* 法律法规库 */
+.law-card{padding:18px 22px;margin-bottom:14px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;cursor:pointer;transition:all .2s;border-left:4px solid #3b82f6}
+.law-card:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(59,130,246,.12);transform:translateY(-1px)}
+.law-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:8px}
+.law-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:0}
+.law-title .title-text{font-size:15px;font-weight:600;color:#0f172a}
+.law-meta{font-size:12px;color:#94a3b8;white-space:nowrap;flex-shrink:0;padding-top:3px}
+.law-summary{font-size:13px;color:#475569;line-height:1.7;margin-bottom:8px}
+.law-points{background:#f1f5f9;border-radius:6px;padding:10px 14px;font-size:12.5px;color:#334155;line-height:1.7}
+.law-points .points-label{font-weight:600;color:#1e40af;margin-bottom:4px}
+.law-tag{background:#dbeafe;color:#1e40af;border-color:#bfdbfe}
+.admin-tag{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.dept-tag{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+.norm-tag{background:#fce7f3;color:#9d174d;border-color:#fbcfe8}
+.type-industry{color:#64748b}
+
+.law-detail .detail-row{display:flex;padding:8px 0;border-bottom:1px dashed #e2e8f0;font-size:13.5px}
+.law-detail .detail-row .label{width:80px;color:#64748b;flex-shrink:0;font-weight:500}
+.law-detail .detail-row span:last-child{color:#0f172a}
+.law-detail .detail-block{margin-top:16px}
+.law-detail .detail-block .block-title{font-weight:600;color:#1e3a8a;font-size:14px;margin-bottom:8px;padding-left:10px;border-left:3px solid #3b82f6}
+.law-detail .detail-block .block-content{font-size:13.5px;color:#334155;line-height:1.8;background:#f8fafc;border-radius:6px;padding:12px 14px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script src="/libs/vue.js?v=1787016030"></script>
+<script src="/libs/element-plus.js?v=1787016030"></script>
+<script src="/libs/element-plus-zh.js?v=1787016030"></script>
+<script src="/libs/ep-icons.js?v=1787016030"></script>
+<script src="/libs/echarts.js?v=1787016030"></script>
+<script>
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, nextTick, watch, h } = Vue;
+
+/* ====== API 助手 ====== */
+const api = {
+  async request(path, opts={}){
+    const r = await fetch(path, {
+      headers:{'Content-Type':'application/json',...(opts.headers||{})},
+      credentials:'include',
+      ...opts,
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    });
+    const data = await r.json();
+    if(data.code !== 0){ ElementPlus.ElMessage.error(data.message||'请求失败'); throw new Error(data.message); }
+    return data.data;
+  },
+  get:(p)=>api.request(p),
+  post:(p,b)=>api.request(p,{method:'POST',body:b}),
+  put:(p,b)=>api.request(p,{method:'PUT',body:b}),
+  del:(p)=>api.request(p,{method:'DELETE'})
+};
+
+/* ====== 登录组件 ====== */
+const LoginComp = {
+  emits:['success'],
+  setup(_,{emit}){
+    const form = reactive({username:'',password:''});
+    const loading = ref(false);
+    const submit = async()=>{
+      if(!form.username||!form.password){ElementPlus.ElMessage.warning('请输入账号和密码');return;}
+      loading.value = true;
+      try{
+        const data = await api.post('/api/auth/login', form);
+        ElementPlus.ElMessage.success('登录成功，欢迎 '+data.user.real_name);
+        emit('success', data.user);
+      }catch(e){}finally{loading.value=false;}
+    };
+    const fill=(u,p)=>{form.username=u;form.password=p;};
+    return {form,loading,submit,fill};
+  },
+  template:`
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">安</div>
+        <h1>安全环保工作监督系统</h1>
+        <p>水泥企业 · 安环部工作管理平台</p>
+      </div>
+      <el-form :model="form" @submit.prevent="submit" size="large">
+        <el-form-item>
+          <el-input v-model="form.username" placeholder="账号" :prefix-icon="'User'" clearable/>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="form.password" type="password" placeholder="密码" show-password @keyup.enter="submit" :prefix-icon="'Lock'"/>
+        </el-form-item>
+        <el-button type="primary" class="login-btn" :loading="loading" @click="submit">登 录</el-button>
+      </el-form>
+      <div class="login-tip">
+        演示账号：
+        <span @click="fill('admin','123456')">admin</span> /
+        <span @click="fill('anhuabu','123456')">安环部</span> /
+        <span @click="fill('ceo','123456')">总经理</span>
+        （密码均为 123456）
+      </div>
+    </div>
+  </div>`
+};
+
+/* ====== Dashboard ====== */
+const DashboardComp = {
+  props:['user'],
+  setup(props){
+    const year = ref(new Date().getFullYear());
+    const month = ref(new Date().getMonth()+1);
+    const loading = ref(true);
+    const data = reactive({
+      month:{complete_rate:0,total:0,done:0,overdue:0},
+      year:{complete_rate:0,total:0,done:0},
+      hazard:{complete_rate:0,total:0,done:0,pending:0,overdue:0},
+      trend:[],hazard_status:[],
+      upcoming:[],unclosed:[],recent_checks:[]
+    });
+    const trendRef = ref(null), hazardRef = ref(null);
+    let trendChart=null, hazardChart=null;
+
+    const load = async()=>{
+      loading.value = true;
+      try{
+        const d = await api.get('/api/report/dashboard?year='+year.value);
+        Object.assign(data, d);
+        await nextTick();
+        renderTrend();
+        renderHazardStatus();
+      }catch(e){}
+      loading.value = false;
+    };
+
+    const renderTrend = ()=>{
+      if(!trendRef.value) return;
+      trendChart = trendChart || echarts.init(trendRef.value);
+      const months = data.trend.map(t=>t.month+'月');
+      trendChart.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['计划完成率','隐患整改率'],right:0,top:0,textStyle:{fontSize:12}},
+        grid:{left:36,right:16,top:40,bottom:30},
+        xAxis:{type:'category',data:months,axisLine:{lineStyle:{color:'#e2e8f0'}},axisLabel:{color:'#94a3b8'}},
+        yAxis:{type:'value',max:100,axisLabel:{formatter:'{value}%',color:'#94a3b8'},splitLine:{lineStyle:{color:'#f1f5f9'}}},
+        series:[
+          {name:'计划完成率',type:'line',smooth:true,data:data.trend.map(t=>t.plan_rate),
+           itemStyle:{color:'#1d5fa4'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(29,95,164,.25)'},{offset:1,color:'rgba(29,95,164,0)'}]}}},
+          {name:'隐患整改率',type:'line',smooth:true,data:data.trend.map(t=>t.hazard_rate),
+           itemStyle:{color:'#16a34a'},areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,colorStops:[{offset:0,color:'rgba(22,163,74,.2)'},{offset:1,color:'rgba(22,163,74,0)'}]}}}
+        ]
+      });
+    };
+
+    const renderHazardStatus = ()=>{
+      if(!hazardRef.value) return;
+      hazardChart = hazardChart || echarts.init(hazardRef.value);
+      hazardChart.setOption({
+        tooltip:{trigger:'item',formatter:'{b}: {c} ({d}%)'},
+        legend:{bottom:0,textStyle:{fontSize:12}},
+        series:[{
+          type:'pie',radius:['50%','75%'],center:['50%','42%'],
+          avoidLabelOverlap:true,itemStyle:{borderRadius:4,borderColor:'#fff',borderWidth:2},
+          label:{show:true,formatter:'{b}\n{c}',fontSize:12},
+          data:(data.hazard_status.length?data.hazard_status:[
+            {name:'已完成',value:data.hazard.done,itemStyle:{color:'#16a34a'}},
+            {name:'整改中',value:data.hazard.total-data.hazard.done-data.hazard.overdue,itemStyle:{color:'#f59e0b'}},
+            {name:'超期未改',value:data.hazard.overdue,itemStyle:{color:'#dc2626'}},
+          ]).map((d,i)=>{
+            const colors=['#16a34a','#f59e0b','#dc2626','#1d5fa4'];
+            return d.itemStyle?d:{...d,itemStyle:{color:colors[i%colors.length]}};
+          })
+        }]
+      });
+    };
+
+    const onResize = ()=>{trendChart&&trendChart.resize();hazardChart&&hazardChart.resize();};
+
+    onMounted(()=>{load();window.addEventListener('resize',onResize);});
+    onUnmounted(()=>{window.removeEventListener('resize',onResize);trendChart&&trendChart.dispose();hazardChart&&hazardChart.dispose();});
+
+    return {data,loading,year,month,load,trendRef,hazardRef};
+  },
+  template:`
+  <div>
+    <div class="stat-row">
+      <div class="stat-card blue">
+        <div class="icon-bg"></div>
+        <div class="s-label">本月工作计划完成率</div>
+        <div class="s-value">{{data.month.complete_rate}}<span class="s-unit">%</span></div>
+        <div class="s-foot">共 {{data.month.total}} 项 · 已完成 {{data.month.done}} 项</div>
+      </div>
+      <div class="stat-card green">
+        <div class="icon-bg"></div>
+        <div class="s-label">年度工作计划完成率</div>
+        <div class="s-value">{{data.year.complete_rate}}<span class="s-unit">%</span></div>
+        <div class="s-foot">年度累计 {{data.year.done}} / {{data.year.total}} 项</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="icon-bg"></div>
+        <div class="s-label">隐患整改闭环率</div>
+        <div class="s-value">{{data.hazard.complete_rate}}<span class="s-unit">%</span></div>
+        <div class="s-foot">在库 {{data.hazard.total}} 条 · 待整改 {{data.hazard.pending}} 条</div>
+      </div>
+      <div class="stat-card red">
+        <div class="icon-bg"></div>
+        <div class="s-label">超期未闭环</div>
+        <div class="s-value">{{data.hazard.overdue + data.month.overdue}}<span class="s-unit">项</span></div>
+        <div class="s-foot">隐患超期 {{data.hazard.overdue}} 条 · 计划超期 {{data.month.overdue}} 项</div>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="card">
+        <div class="card-header">
+          <h3>月度完成情况趋势（近12个月）</h3>
+          <el-select v-model="year" size="small" style="width:100px" @change="load">
+            <el-option :value="2025" label="2025"/>
+            <el-option :value="2026" label="2026"/>
+            <el-option :value="2027" label="2027"/>
+          </el-select>
+        </div>
+        <div class="card-body"><div ref="trendRef" class="chart-box"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>隐患状态分布</h3></div>
+        <div class="card-body"><div ref="hazardRef" class="chart-box"></div></div>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-header"><h3>📅 即将到期工作计划（7天内）</h3>
+          <span v-if="data.upcoming.length" style="font-size:12px;color:#94a3b8">共 {{data.upcoming.length}} 项</span>
+        </div>
+        <div class="card-body">
+          <div v-if="!data.upcoming.length" class="empty"><div class="icon">🎉</div><div class="txt">近期工作计划完成良好</div></div>
+          <div v-else class="mini-list">
+            <div v-for="(p,i) in data.upcoming" :key="i" class="list-item">
+              <div class="dot" :style="{background:p.status==='overdue'?'#dc2626':p.status==='warning'?'#f59e0b':'#1d5fa4'}"></div>
+              <div class="txt">
+                <div class="t1">{{p.title}}</div>
+                <div class="t2">负责人：{{p.responsible||'未指定'}} · 截止 {{p.deadline}} · 进度 {{p.progress}}%</div>
+              </div>
+              <div class="progress-bar"><div class="fill" :style="{width:p.progress+'%',background:p.progress>=80?'#16a34a':p.progress>=50?'#f59e0b':'#dc2626'}"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>⚠️ 未闭环隐患</h3>
+          <span v-if="data.unclosed.length" style="font-size:12px;color:#dc2626">共 {{data.unclosed.length}} 条</span>
+        </div>
+        <div class="card-body">
+          <div v-if="!data.unclosed.length" class="empty"><div class="icon">✅</div><div class="txt">暂无未闭环隐患，继续保持</div></div>
+          <div v-else class="mini-list">
+            <div v-for="(h,i) in data.unclosed" :key="i" class="list-item">
+              <div class="dot" :style="{background:h.level==='major'?'#dc2626':'#f59e0b'}"></div>
+              <div class="txt">
+                <div class="t1">
+                  <el-tag v-if="h.level==='major'" size="small" type="danger" effect="light" style="margin-right:6px">重大</el-tag>
+                  {{h.location||''}} {{h.description||''}}
+                </div>
+                <div class="t2">检查日期：{{h.check_date}} · 整改期限：{{h.deadline}} · 整改率 {{h.rectify_progress||0}}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`
+};
+
+/* ====== 工作计划 ====== */
+const WorkPlanComp = {
+  props:['user'],
+  setup(props){
+    const year = ref(new Date().getFullYear());
+    const typeFilter = ref('');
+    const keyword = ref('');
+    const list = ref([]);
+    const total = ref(0);
+    const page = ref(1);
+    const pageSize = ref(10);
+    const dialog = reactive({show:false,edit:null,data:defaultPlan()});
+    const view = ref('plan');
+
+    const dutyList = ref([]);
+    const dutyStats = ref({});
+
+    function defaultPlan(){
+      const d = new Date();
+      return {title:'',category:'',type:'月度',plan_year:d.getFullYear(),plan_month:d.getMonth()+1,
+        content:'',law_basis:'',responsible:'',deadline:d.toISOString().slice(0,10),progress:0,status:'pending'};
+    }
+
+    const load = async()=>{
+      let url = '/api/workplan/list?year='+year.value+'&page='+page.value+'&size='+pageSize.value;
+      if(typeFilter.value) url += '&type='+typeFilter.value;
+      if(keyword.value) url += '&keyword='+encodeURIComponent(keyword.value);
+      try{
+        const d = await api.get(url);
+        list.value = d.items||d; total.value = d.total||d.length;
+      }catch(e){}
+    };
+
+    const loadDuties = async()=>{
+      try{
+        const d = await api.get('/api/workplan/list?category='+encodeURIComponent('安全职责')+'&year='+year.value);
+        dutyList.value = d.data || [];
+        const stats = {};
+        for(const role of ['主要负责人','分管负责人','安全管理员']){
+          const items = dutyList.value.filter(x=>x.responsible===role);
+          const done = items.filter(x=>x.progress>=100).length;
+          const inp = items.filter(x=>x.progress>0 && x.progress<100).length;
+          const totalP = items.reduce((s,x)=>s+(x.progress||0),0);
+          stats[role] = {total:items.length, done, inp, avg: items.length? Math.round(totalP/items.length):0};
+        }
+        dutyStats.value = stats;
+      }catch(e){}
+    };
+
+    const openAdd = ()=>{dialog.edit=null;dialog.data=defaultPlan();dialog.show=true;};
+    const openEdit = (row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+
+    const save = async()=>{
+      if(!dialog.data.title){ElementPlus.ElMessage.warning('请填写计划名称');return;}
+      try{
+        if(dialog.edit){await api.put('/api/workplan/'+dialog.edit, dialog.data);ElementPlus.ElMessage.success('已更新');}
+        else{await api.post('/api/workplan/', dialog.data);ElementPlus.ElMessage.success('已新增');}
+        dialog.show=false; view.value==='duty'? loadDuties():load();
+      }catch(e){}
+    };
+
+    const remove = async(row)=>{
+      try{
+        await ElementPlus.ElMessageBox.confirm('确定删除此工作计划？','确认',{type:'warning'});
+        await api.del('/api/workplan/'+row.id);
+        ElementPlus.ElMessage.success('已删除'); view.value==='duty'? loadDuties():load();
+      }catch(e){}
+    };
+
+    const quickProgress = (row)=>{
+      ElementPlus.ElMessageBox.prompt('更新进度百分比（0-100）','更新进度',{
+        inputValue:row.progress,inputPattern:/^(100|[0-9]?\d)$/,inputErrorMessage:'请输入 0-100 的整数'
+      }).then(async({value})=>{
+        row.progress = parseInt(value);
+        row.status = row.progress>=100?'completed':row.progress===0?'pending':'in_progress';
+        await api.put('/api/workplan/'+row.id, {progress:row.progress, status:row.status});
+        ElementPlus.ElMessage.success('已更新'); view.value==='duty'? loadDuties():load();
+      }).catch(()=>{});
+    };
+
+    onMounted(load);
+
+    const statusMap = {pending:{t:'待开始',c:'tag-gray'},in_progress:{t:'进行中',c:'tag-blue'},completed:{t:'已完成',c:'tag-green'},overdue:{t:'已超期',c:'tag-red'}};
+    const roleMeta = {
+      '主要负责人':{icon:'👑',color:'#dc2626',bg:'#fef2f2',border:'#fecaca',desc:'安全生产第一责任人，对本单位安全生产工作全面负责',law:'《安全生产法》第五条、第二十一条'},
+      '分管负责人':{icon:'🎖️',color:'#2563eb',bg:'#eff6ff',border:'#bfdbfe',desc:'协助主要负责人统筹安全生产，分管安环部日常工作',law:'《安全生产法》第二十一条'},
+      '安全管理员':{icon:'🛡️',color:'#16a34a',bg:'#f0fdf4',border:'#bbf7d0',desc:'具体负责安全生产日常管理，隐患排查、教育培训、应急管理等',law:'《安全生产法》第二十五条'},
+    };
+    const dutiesOf = (role)=> dutyList.value.filter(function(x){return x.responsible===role;});
+    const dutyCount = (role)=> dutiesOf(role).length;
+    const onTabChange = (t)=>{ if(t==='duty') loadDuties(); else load(); };
+    const pad2 = (n)=>{ const s=''+n; return s.length<2?'0'+s:s; };
+    const dutyStatOf = (role)=> dutyStats.value[role] || {};
+    const dutyProgressStyle = (role, meta)=>{
+      const avg = (dutyStats.value[role]||{}).avg || 0;
+      return { width: avg+'%', background: meta.color, height: '100%', borderRadius: '2px' };
+    };
+    const progressColor = (p)=>{ if(p>=100) return '#16a34a'; if(p>=50) return '#f59e0b'; return '#cbd5e1'; };
+    const progressBarStyle = (p,h)=>{ h = h || '3px'; return { width: p+'%', background: progressColor(p), height: '100%', borderRadius: h }; };
+
+    return {year,typeFilter,keyword,list,total,page,pageSize,dialog,view,dutyList,dutyStats,roleMeta,load,openAdd,openEdit,save,remove,quickProgress,statusMap,dutiesOf,dutyCount,onTabChange,pad2,dutyStatOf,dutyProgressStyle,progressColor,progressBarStyle};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div>
+        <h2>工作计划管理</h2>
+        <div class="sub" v-if="view==='plan'">按月度、季度、年度维护安环部工作任务，跟踪执行进度</div>
+        <div class="sub" v-else>企业主要负责人 / 分管负责人 / 安全管理员 三级安全职责落地看板</div>
+      </div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">新增工作计划</el-button>
+    </div>
+
+    <el-tabs v-model="view" @tab-change="onTabChange" style="margin-bottom:14px">
+      <el-tab-pane label="📋 工作计划" name="plan"/>
+      <el-tab-pane label="👑🛡️ 安全职责分解看板" name="duty"/>
+    </el-tabs>
+
+    <!-- ============ 工作计划视图 ============ -->
+    <template v-if="view==='plan'">
+    <div class="filter-bar">
+      <el-select v-model="year" style="width:100px" @change="page=1;load">
+        <el-option :value="2025" label="2025年"/><el-option :value="2026" label="2026年"/><el-option :value="2027" label="2027年"/>
+      </el-select>
+      <el-select v-model="typeFilter" placeholder="全部类型" clearable style="width:120px" @change="page=1;load">
+        <el-option value="月度" label="月度"/><el-option value="季度" label="季度"/><el-option value="年度" label="年度"/>
+      </el-select>
+      <el-input v-model="keyword" placeholder="搜索计划名称/类别" style="width:240px" clearable @keyup.enter="page=1;load" @clear="page=1;load"/>
+      <el-button @click="page=1;load">查询</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe style="width:100%" size="default">
+        <el-table-column type="index" width="55" label="#"/>
+        <el-table-column prop="title" label="计划名称" min-width="240">
+          <template #default="{row}">
+            <div style="font-weight:500;color:var(--text)">{{row.title}}</div>
+            <div class="law-basis" v-if="row.law_basis">📘 {{row.law_basis}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="类别" width="120">
+          <template #default="{row}"><el-tag size="small" effect="plain">{{row.category||'-'}}</el-tag></template>
+        </el-table-column>
+        <el-table-column label="类型" width="80">
+          <template #default="{row}">{{row.type}}<span v-if="row.plan_month">·{{row.plan_month}}月</span></template>
+        </el-table-column>
+        <el-table-column label="负责人" width="120" prop="responsible"/>
+        <el-table-column label="截止日期" width="110">
+          <template #default="{row}">
+            <span :style="{color:row.status==='overdue'?'#dc2626':''}">{{row.deadline}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="进度" width="170">
+          <template #default="{row}">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="progress-bar" style="flex:1"><div class="fill" :style="progressBarStyle(row.progress)"></div></div>
+              <span style="font-size:12px;color:var(--text-2);min-width:36px;text-align:right">{{row.progress}}%</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="100">
+          <template #default="{row}">
+            <span class="el-tag" :class="(statusMap[row.status]||{}).c||'tag-gray'" effect="light">{{(statusMap[row.status]||{}).t||row.status}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="190" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="quickProgress(row)">更新进度</el-button>
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div style="padding:16px 20px;display:flex;justify-content:flex-end">
+        <el-pagination v-model:current-page="page" v-model:page-size="pageSize" :total="total" :page-sizes="[10,20,50]" layout="total,sizes,prev,pager,next" @current-change="load" @size-change="load"/>
+      </div>
+    </div>
+    </template>
+
+    <!-- ============ 安全职责分解看板 ============ -->
+    <template v-else>
+    <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+      <el-select v-model="year" style="width:120px" @change="loadDuties">
+        <el-option :value="2025" label="2025年"/><el-option :value="2026" label="2026年"/><el-option :value="2027" label="2027年"/>
+      </el-select>
+      <div style="color:#64748b;font-size:13px">👉 点击任意职责卡片上的"更新进度"，即可标记完成状态</div>
+    </div>
+
+    <!-- 三级角色统计卡片 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px">
+      <div v-for="(meta,role) in roleMeta" :key="role" class="card duty-role-card" :style="{borderTop:'4px solid '+meta.color,background:meta.bg}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:28px">{{meta.icon}}</span>
+              <div>
+                <div style="font-weight:700;font-size:16px;color:#0f172a">{{role}}</div>
+                <div style="font-size:11.5px;color:#64748b;margin-top:2px">{{meta.desc}}</div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:#94a3b8">📘 法规依据：{{meta.law}}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:1px dashed #cbd5e1">
+          <div class="duty-stat"><b style="color:#0f172a;font-size:20px">{{dutyStatOf(role).total||0}}</b><span>总职责</span></div>
+          <div class="duty-stat"><b style="color:#16a34a;font-size:20px">{{dutyStatOf(role).done||0}}</b><span>已完成</span></div>
+          <div class="duty-stat"><b style="color:#f59e0b;font-size:20px">{{dutyStatOf(role).inp||0}}</b><span>进行中</span></div>
+          <div class="duty-stat" style="flex:1">
+            <b :style="{color:meta.color,'font-size':'20px'}">{{dutyStatOf(role).avg||0}}%</b>
+            <span>平均进度</span>
+            <div class="progress-bar" style="height:4px;margin-top:4px;background:#e2e8f0;border-radius:2px">
+              <div class="fill" :style="dutyProgressStyle(role,meta)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 按角色分组的职责列表 -->
+    <div v-for="(meta,role) in roleMeta" :key="'list-'+role" class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:2px solid" :style="{borderColor:meta.color}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">{{meta.icon}}</span>
+          <div style="font-weight:700;font-size:15px;color:#0f172a">{{role}} · 安全职责清单</div>
+          <el-tag size="small" effect="light" :style="{background:meta.bg,color:meta.color,borderColor:meta.border}">
+            {{dutyCount(role)}} 项
+          </el-tag>
+        </div>
+      </div>
+      <div v-if="dutyCount(role)===0" style="color:#94a3b8;padding:20px;text-align:center;font-size:13px">暂无职责数据</div>
+      <div v-else>
+        <div v-for="(item,idx) in dutiesOf(role)" :key="item.id" class="duty-item" :style="{borderLeft:'3px solid '+meta.color}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <span style="color:#94a3b8;font-size:12px;font-weight:600">{{pad2(idx+1)}}</span>
+                <span style="font-weight:600;color:#0f172a;font-size:14.5px">{{item.title}}</span>
+                <el-tag size="small" effect="plain" type="info">{{item.type}}</el-tag>
+              </div>
+              <div style="font-size:12.5px;color:#475569;line-height:1.7;margin-bottom:5px">{{item.content}}</div>
+              <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+                <span style="font-size:11px;color:#64748b">📘 {{item.law_basis}}</span>
+                <span style="font-size:11px;color:#94a3b8">截止：{{item.deadline}}</span>
+              </div>
+            </div>
+            <div style="flex-shrink:0;width:140px;text-align:right">
+              <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-bottom:6px">
+                <div class="progress-bar" style="width:80px;height:6px;background:#e2e8f0;border-radius:3px">
+                  <div class="fill" :style="progressBarStyle(item.progress||0,'3px')"></div>
+                </div>
+                <span style="font-size:12px;font-weight:600;color:#475569">{{item.progress||0}}%</span>
+              </div>
+              <el-button size="small" link type="primary" @click="quickProgress(item)">更新进度</el-button>
+              <el-button size="small" link type="primary" @click="openEdit(item)">编辑</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </template>
+
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑工作计划':'新增工作计划'" width="680px" :close-on-click-modal="false">
+      <el-form :model="dialog.data" label-width="90px">
+        <el-form-item label="计划名称"><el-input v-model="dialog.data.title" placeholder="如：8月回转窑专项检查"/></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="12">
+            <el-form-item label="计划类型">
+              <el-select v-model="dialog.data.type" style="width:100%"><el-option value="月度"/><el-option value="季度"/><el-option value="年度"/></el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="所属类别">
+              <el-select v-model="dialog.data.category" style="width:100%" filterable allow-create default-first-option>
+                <el-option v-for="c in ['安全生产目标','组织机构','教育培训','设备设施','作业安全','职业健康','应急管理','环保管理','隐患排查','安全投入','重大危险源']" :key="c" :value="c"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="8"><el-form-item label="年份"><el-input-number v-model="dialog.data.plan_year" :min="2020" :max="2035" style="width:100%"/></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="月份"><el-input-number v-model="dialog.data.plan_month" :min="1" :max="12" style="width:100%"/></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="截止日期"><el-date-picker v-model="dialog.data.deadline" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+        </el-row>
+        <el-form-item label="内容描述"><el-input v-model="dialog.data.content" type="textarea" :rows="3" placeholder="具体工作内容、要求等"/></el-form-item>
+        <el-form-item label="法规依据"><el-input v-model="dialog.data.law_basis" type="textarea" :rows="2" placeholder="如：《安全生产法》第二十八条"/></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="负责人"><el-input v-model="dialog.data.responsible" placeholder="部门/人员"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="初始进度">
+            <el-slider v-model="dialog.data.progress" :max="100" :step="5" show-input style="padding:0 6px"/>
+          </el-form-item></el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialog.show=false">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
+      </template>
+    </el-dialog>
+  </div>`,
+};
+
+/* ====== 安全检查 ====== */
+const InspectionComp = {
+  setup(){
+    const list = ref([]);
+    const loading = ref(true);
+    const dialog = reactive({show:false,edit:null,data:defaultInspect()});
+    function defaultInspect(){return{title:'',inspector:'',inspect_date:new Date().toISOString().slice(0,10),location:'',check_list:'',result:'合格',remark:''};}
+
+    const load = async()=>{
+      loading.value = true;
+      try{const d = await api.get('/api/inspection/list'); list.value = d||[];}catch(e){}
+      loading.value = false;
+    };
+
+    const openAdd=()=>{dialog.edit=null;dialog.data=defaultInspect();dialog.show=true;};
+    const openEdit=(row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save=async()=>{
+      if(!dialog.data.title){ElementPlus.ElMessage.warning('请填写检查名称');return;}
+      try{
+        if(dialog.edit) await api.put('/api/inspection/'+dialog.edit,dialog.data);
+        else await api.post('/api/inspection/',dialog.data);
+        ElementPlus.ElMessage.success('已保存');dialog.show=false;load();
+      }catch(e){}
+    };
+    const remove=async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确定删除？','确认',{type:'warning'});
+        await api.del('/api/inspection/'+row.id);ElementPlus.ElMessage.success('已删除');load();}catch(e){}
+    };
+
+    onMounted(load);
+    return {list,loading,dialog,openAdd,openEdit,save,remove};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>安全检查记录</h2><div class="sub">登记日常安全巡检、专项检查、季节性检查结果</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">新增检查记录</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe v-loading="loading">
+        <el-table-column type="index" width="55"/>
+        <el-table-column prop="title" label="检查名称" min-width="200"/>
+        <el-table-column prop="location" label="检查地点" width="150"/>
+        <el-table-column prop="inspector" label="检查人" width="110"/>
+        <el-table-column label="检查日期" width="120" prop="inspect_date"/>
+        <el-table-column label="结果" width="90">
+          <template #default="{row}">
+            <el-tag :class="row.result==='合格'?'tag-green':'tag-red'" effect="light" size="small">{{row.result||'-'}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="备注" prop="remark" min-width="180" show-overflow-tooltip/>
+        <el-table-column label="操作" width="170" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑检查记录':'新增检查记录'" width="600px" :close-on-click-modal="false">
+      <el-form :model="dialog.data" label-width="90px">
+        <el-form-item label="检查名称"><el-input v-model="dialog.data.title" placeholder="如：8月回转窑专项检查"/></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="检查人"><el-input v-model="dialog.data.inspector"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="检查日期"><el-date-picker v-model="dialog.data.inspect_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+        </el-row>
+        <el-form-item label="检查地点"><el-input v-model="dialog.data.location" placeholder="如：窑尾收尘、生料库顶等"/></el-form-item>
+        <el-form-item label="检查清单"><el-input v-model="dialog.data.check_list" type="textarea" :rows="3" placeholder="检查的具体项目或勾选清单"/></el-form-item>
+        <el-form-item label="检查结果">
+          <el-radio-group v-model="dialog.data.result"><el-radio label="合格">合格</el-radio><el-radio label="不合格">不合格</el-radio></el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注"><el-input v-model="dialog.data.remark" type="textarea" :rows="2"/></el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialog.show=false">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
+      </template>
+    </el-dialog>
+  </div>`
+};
+
+/* ====== 隐患台账 ====== */
+const HazardComp = {
+  props:['user'],
+  setup(props){
+    const list = ref([]);
+    const loading = ref(true);
+    const statusFilter = ref('');
+    const levelFilter = ref('');
+    const dialog = reactive({show:false,edit:null,data:defaultHazard()});
+    function defaultHazard(){
+      const d=new Date(); const dl=new Date(d.getTime()+7*86400000);
+      return{check_date:d.toISOString().slice(0,10),location:'',description:'',level:'general',
+        source:'日常检查',responsible:'',rectify_measure:'',deadline:dl.toISOString().slice(0,10),
+        rectify_progress:0,status:'pending',accept_note:''};
+    }
+
+    const load = async()=>{
+      loading.value = true;
+      try{
+        let url='/api/hazard/list?';
+        if(statusFilter.value) url+='status='+statusFilter.value+'&';
+        if(levelFilter.value) url+='level='+levelFilter.value+'&';
+        const d = await api.get(url); list.value = d||[];
+      }catch(e){}
+      loading.value=false;
+    };
+
+    const openAdd=()=>{dialog.edit=null;dialog.data=defaultHazard();dialog.show=true;};
+    const openEdit=(row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save=async()=>{
+      if(!dialog.data.description){ElementPlus.ElMessage.warning('请填写隐患描述');return;}
+      try{
+        if(dialog.edit) await api.put('/api/hazard/'+dialog.edit,dialog.data);
+        else await api.post('/api/hazard/',dialog.data);
+        ElementPlus.ElMessage.success('已保存');dialog.show=false;load();
+      }catch(e){}
+    };
+    const remove=async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确定删除？','确认',{type:'warning'});
+        await api.del('/api/hazard/'+row.id);ElementPlus.ElMessage.success('已删除');load();}catch(e){}
+    };
+    const quickRectify=async(row)=>{
+      ElementPlus.ElMessageBox.prompt('整改进度（%）','更新整改',{inputValue:row.rectify_progress}).then(async({value})=>{
+        const p=parseInt(value);
+        if(p>=100){
+          try{await ElementPlus.ElMessageBox.confirm('整改完成，是否提交验收？','确认',{type:'info'});
+            row.rectify_progress=100;row.status='rectified';}catch(e){row.rectify_progress=p;}
+        }else{row.rectify_progress=p;row.status='rectifying';}
+        await api.put('/api/hazard/'+row.id,{rectify_progress:row.rectify_progress,status:row.status});
+        ElementPlus.ElMessage.success('已更新');load();
+      }).catch(()=>{});
+    };
+    const accept=async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确认验收通过，隐患闭环？','验收确认',{type:'success'});
+        await api.put('/api/hazard/'+row.id,{status:'closed'});
+        ElementPlus.ElMessage.success('已闭环');load();}catch(e){}
+    };
+
+    const statusMap={pending:'待整改',rectifying:'整改中',rectified:'待验收',closed:'已闭环'};
+
+    onMounted(load);
+    return {list,loading,statusFilter,levelFilter,dialog,load,openAdd,openEdit,save,remove,quickRectify,accept,statusMap};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>隐患台账管理</h2><div class="sub">登记、整改、验收的闭环管理，一般隐患即时改，重大隐患挂牌督办</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">登记隐患</el-button>
+    </div>
+    <div class="filter-bar">
+      <el-select v-model="statusFilter" placeholder="全部状态" clearable style="width:130px" @change="load">
+        <el-option value="pending" label="待整改"/><el-option value="rectifying" label="整改中"/>
+        <el-option value="rectified" label="待验收"/><el-option value="closed" label="已闭环"/>
+      </el-select>
+      <el-select v-model="levelFilter" placeholder="全部级别" clearable style="width:130px" @change="load">
+        <el-option value="major" label="重大隐患"/><el-option value="general" label="一般隐患"/>
+      </el-select>
+      <el-button type="primary" plain @click="statusFilter='';levelFilter='';load">重置</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe v-loading="loading" style="width:100%">
+        <el-table-column type="index" width="55"/>
+        <el-table-column label="级别" width="90">
+          <template #default="{row}">
+            <el-tag v-if="row.level==='major'" effect="dark" class="level-major">重大</el-tag>
+            <el-tag v-else effect="dark" class="level-general">一般</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="隐患描述" min-width="260">
+          <template #default="{row}">
+            <div style="font-weight:500">{{row.description}}</div>
+            <div style="font-size:12px;color:#94a3b8;margin-top:3px">📍 {{row.location}} · 来源：{{row.source}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="检查日期" width="110" prop="check_date"/>
+        <el-table-column label="整改期限" width="110">
+          <template #default="{row}"><span :style="{color:row.status!=='closed'&&new Date(row.deadline)<new Date()?'#dc2626':''}">{{row.deadline}}</span></template>
+        </el-table-column>
+        <el-table-column label="整改负责人" width="120" prop="responsible"/>
+        <el-table-column label="整改进度" width="160">
+          <template #default="{row}">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="progress-bar" style="flex:1"><div class="fill" :style="{width:row.rectify_progress+'%',background:row.rectify_progress>=100?'#16a34a':row.rectify_progress>=50?'#f59e0b':'#dc2626'}"></div></div>
+              <span style="font-size:12px;color:var(--text-2)">{{row.rectify_progress}}%</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="100">
+          <template #default="{row}">
+            <el-tag :class="{'待整改':'tag-red','整改中':'tag-orange','待验收':'tag-blue','已闭环':'tag-green'}[statusMap[row.status]]" effect="light" size="small">{{statusMap[row.status]}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="240" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="quickRectify(row)" v-if="row.status!=='closed'">更新整改</el-button>
+            <el-button size="small" link type="success" @click="accept(row)" v-if="row.status==='rectified'">验收闭环</el-button>
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑隐患':'登记隐患'" width="680px" :close-on-click-modal="false">
+      <el-form :model="dialog.data" label-width="100px">
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="检查日期"><el-date-picker v-model="dialog.data.check_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="隐患级别">
+            <el-radio-group v-model="dialog.data.level"><el-radio label="major">重大</el-radio><el-radio label="general">一般</el-radio></el-radio-group>
+          </el-form-item></el-col>
+        </el-row>
+        <el-form-item label="隐患描述"><el-input v-model="dialog.data.description" type="textarea" :rows="2" placeholder="清晰描述隐患的具体情况"/></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="所在地点"><el-input v-model="dialog.data.location" placeholder="如：窑尾收尘仓下"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="来源"><el-select v-model="dialog.data.source" style="width:100%"><el-option value="日常检查"/><el-option value="专项检查"/><el-option value="季节性检查"/><el-option value="上级检查"/><el-option value="员工举报"/></el-select></el-form-item></el-col>
+        </el-row>
+        <el-form-item label="整改措施"><el-input v-model="dialog.data.rectify_measure" type="textarea" :rows="2" placeholder="针对隐患的整改方案"/></el-form-item>
+        <el-row :gutter="12">
+          <el-col :span="8"><el-form-item label="整改负责人"><el-input v-model="dialog.data.responsible"/></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="整改期限"><el-date-picker v-model="dialog.data.deadline" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="初始进度"><el-input-number v-model="dialog.data.rectify_progress" :min="0" :max="100" style="width:100%"/></el-form-item></el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialog.show=false">取消</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
+      </template>
+    </el-dialog>
+  </div>`
+};
+
+/* ====== 统计报表 ====== */
+const ReportComp = {
+  setup(){
+    const year = ref(new Date().getFullYear());
+    const month = ref(new Date().getMonth()+1);
+    const loading = ref(false);
+    const charts = {trend:null,cat:null,hazard:null,compliance:null};
+    const refs = {trend:ref(null),cat:ref(null),hazard:ref(null),compliance:ref(null)};
+    const summary = ref({});
+
+    const render = async()=>{
+      loading.value=true;
+      try{
+        const d = await api.get('/api/report/dashboard?year='+year.value);
+        summary.value = d;
+        await nextTick();
+        drawTrend(d.trend||[]);
+        drawCat(d.category_stats||[]);
+        drawHazard(d.hazard_status||[]);
+      }catch(e){}
+      loading.value=false;
+    };
+
+    const drawTrend=(trend)=>{
+      if(!refs.trend.value) return;
+      charts.trend = charts.trend || echarts.init(refs.trend.value);
+      charts.trend.setOption({
+        tooltip:{trigger:'axis'},
+        legend:{data:['计划完成率','隐患整改率'],right:0},
+        grid:{left:40,right:20,top:40,bottom:30},
+        xAxis:{type:'category',data:trend.map(t=>t.month+'月'),axisLine:{lineStyle:{color:'#e2e8f0'}}},
+        yAxis:{type:'value',max:100,axisLabel:{formatter:'{value}%'},splitLine:{lineStyle:{color:'#f1f5f9'}}},
+        series:[
+          {name:'计划完成率',type:'bar',data:trend.map(t=>t.plan_rate),itemStyle:{color:'#1d5fa4',borderRadius:[4,4,0,0]},barWidth:14},
+          {name:'隐患整改率',type:'bar',data:trend.map(t=>t.hazard_rate),itemStyle:{color:'#16a34a',borderRadius:[4,4,0,0]},barWidth:14}
+        ]
+      });
+    };
+
+    const drawCat=(cats)=>{
+      if(!refs.cat.value) return;
+      charts.cat = charts.cat || echarts.init(refs.cat.value);
+      charts.cat.setOption({
+        tooltip:{trigger:'axis'},
+        grid:{left:100,right:20,top:20,bottom:20},
+        xAxis:{type:'value',axisLabel:{formatter:'{value}%'}},
+        yAxis:{type:'category',data:cats.map(c=>c.name).reverse()},
+        series:[{
+          type:'bar',data:cats.map(c=>c.rate).reverse(),barWidth:16,
+          itemStyle:{borderRadius:[0,8,8,0],color:(p)=>{
+            const v=p.value;return v>=90?'#16a34a':v>=70?'#f59e0b':'#dc2626';
+          }},
+          label:{show:true,position:'right',formatter:'{c}%',fontSize:12}
+        }]
+      });
+    };
+
+    const drawHazard=(hs)=>{
+      if(!refs.hazard.value) return;
+      charts.hazard = charts.hazard || echarts.init(refs.hazard.value);
+      charts.hazard.setOption({
+        tooltip:{trigger:'item'},
+        legend:{bottom:0},
+        series:[{type:'pie',radius:['45%','70%'],center:['50%','42%'],
+          itemStyle:{borderRadius:4,borderColor:'#fff',borderWidth:2},
+          data:(hs.length?hs:[{name:'已闭环',value:summary.value.hazard?.done||0,itemStyle:{color:'#16a34a'}},
+            {name:'整改中',value:(summary.value.hazard?.total||0)-(summary.value.hazard?.done||0)-(summary.value.hazard?.overdue||0),itemStyle:{color:'#f59e0b'}},
+            {name:'超期未改',value:summary.value.hazard?.overdue||0,itemStyle:{color:'#dc2626'}}
+          ])}]
+      });
+    };
+
+    const doExport = ()=>{
+      const url = '/api/report/export?year='+year.value+'&month='+month.value;
+      window.location.href = url;
+    };
+
+    const onResize=()=>{Object.values(charts).forEach(c=>c&&c.resize());};
+
+    onMounted(()=>{render();window.addEventListener('resize',onResize);});
+    onUnmounted(()=>{window.removeEventListener('resize',onResize);Object.values(charts).forEach(c=>c&&c.dispose());});
+
+    return {year,month,loading,summary,refs,render,doExport};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>统计报表分析</h2><div class="sub">多维度统计分析，支持 Excel 一键导出</div></div>
+      <div style="display:flex;gap:10px">
+        <el-select v-model="year" style="width:100px" @change="render">
+          <el-option :value="2025" label="2025"/><el-option :value="2026" label="2026"/><el-option :value="2027" label="2027"/>
+        </el-select>
+        <el-select v-model="month" style="width:90px">
+          <el-option v-for="m in 12" :key="m" :value="m" :label="m+'月'"/>
+        </el-select>
+        <el-button type="primary" @click="doExport" :icon="Download">导出 Excel</el-button>
+      </div>
+    </div>
+    <div v-loading="loading">
+      <div class="chart-row">
+        <div class="card"><div class="card-header"><h3>月度完成率对比（柱状）</h3></div>
+          <div class="card-body"><div ref="refs.trend" style="height:320px"></div></div></div>
+        <div class="card"><div class="card-header"><h3>隐患状态占比</h3></div>
+          <div class="card-body"><div ref="refs.hazard" style="height:320px"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>各工作类别完成率</h3></div>
+        <div class="card-body"><div ref="refs.cat" style="height:320px"></div></div>
+      </div>
+    </div>
+  </div>`
+};
+
+/* ====== 检查标准库 ====== */
+const StandardComp = {
+  setup(){
+    const list = ref([]);
+    const cat = ref('');
+    const keyword = ref('');
+    const cats = ref([]);
+    const load = async()=>{
+      try{
+        let url='/api/system/check-templates?';
+        if(cat.value) url+='category='+encodeURIComponent(cat.value)+'&';
+        if(keyword.value) url+='keyword='+encodeURIComponent(keyword.value);
+        const d = await api.get(url);
+        list.value = d||[];
+        const c = [...new Set(list.value.map(t=>t.category))];
+        if(c.length) cats.value = c;
+      }catch(e){}
+    };
+    onMounted(load);
+    return {list,cat,keyword,cats,load};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>安全检查标准库</h2><div class="sub">预置水泥企业安全生产标准化13大元素关键检查项，每条关联法规依据</div></div>
+    </div>
+    <div class="filter-bar">
+      <el-select v-model="cat" placeholder="全部类别" clearable style="width:160px" @change="load">
+        <el-option v-for="c in cats" :key="c" :value="c" :label="c"/>
+      </el-select>
+      <el-input v-model="keyword" placeholder="搜索检查项/法规依据" style="width:260px" clearable @keyup.enter="load" @clear="load"/>
+      <el-button type="primary" @click="load">查询</el-button>
+      <span style="margin-left:auto;color:#94a3b8;font-size:13px">共 {{list.length}} 条标准</span>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe>
+        <el-table-column type="index" width="55"/>
+        <el-table-column prop="category" label="类别" width="130">
+          <template #default="{row}"><el-tag effect="plain">{{row.category}}</el-tag></template>
+        </el-table-column>
+        <el-table-column label="检查项" min-width="240" prop="item"/>
+        <el-table-column label="检查标准" min-width="280" prop="standard" show-overflow-tooltip/>
+        <el-table-column label="法规依据" min-width="240">
+          <template #default="{row}"><span style="font-size:12px;color:var(--text-2)">{{row.law_basis}}</span></template>
+        </el-table-column>
+        <el-table-column label="关键" width="80">
+          <template #default="{row}">
+            <el-tag v-if="row.is_key" type="danger" effect="light" size="small">关键</el-tag>
+            <span v-else style="color:#94a3b8;font-size:12px">一般</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>`
+};
+
+/* ====== 法律法规库 ====== */
+const LawReferenceComp = {
+  setup(){
+    const list = ref([]);
+    const loading = ref(true);
+    const keyword = ref('');
+    const docType = ref('');
+    const industry = ref('');
+    const dialog = reactive({show:false,data:null});
+    const load = async()=>{
+      loading.value = true;
+      let url = '/api/system/law-references?';
+      if(keyword.value) url += 'keyword='+encodeURIComponent(keyword.value)+'&';
+      if(docType.value) url += 'doc_type='+encodeURIComponent(docType.value)+'&';
+      if(industry.value) url += 'industry='+encodeURIComponent(industry.value);
+      try{list.value = await api.get(url);}catch(e){}
+      loading.value = false;
+    };
+    const viewDetail = (row)=>{dialog.data = row; dialog.show = true;};
+    onMounted(load);
+    const docTypeMap = {'法律':'law-tag','行政法规':'admin-tag','部门规章':'dept-tag','规范性文件':'norm-tag'};
+    return {list,loading,keyword,docType,industry,dialog,load,viewDetail,docTypeMap};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>法律法规库</h2><div class="sub">工贸行业、劳动密集型企业安全生产法律法规索引与要点</div></div>
+    </div>
+    <div class="filter-bar">
+      <el-input v-model="keyword" placeholder="搜索法规名称/关键词" style="width:260px" clearable @keyup.enter="load" @clear="load"/>
+      <el-select v-model="docType" placeholder="全部类型" clearable style="width:140px" @change="load">
+        <el-option value="法律"/><el-option value="行政法规"/><el-option value="部门规章"/><el-option value="规范性文件"/>
+      </el-select>
+      <el-select v-model="industry" placeholder="全部行业" clearable style="width:140px" @change="load">
+        <el-option value="通用"/><el-option value="工贸"/><el-option value="建材/水泥"/><el-option value="冶金/有色"/>
+      </el-select>
+      <el-button type="primary" @click="load">查询</el-button>
+    </div>
+    <div class="card">
+      <div v-for="row in list" :key="row.id" class="law-card" @click="viewDetail(row)">
+        <div class="law-head">
+          <div class="law-title">
+            <span class="el-tag" :class="docTypeMap[row.doc_type]||''" size="small" effect="light">{{row.doc_type}}</span>
+            <span class="el-tag type-industry" size="small" effect="plain">{{row.industry}}</span>
+            <span class="title-text">{{row.name}}</span>
+          </div>
+          <div class="law-meta">
+            <span>{{row.issuing_authority}}</span>
+            <span v-if="row.effective_date">· 施行 {{row.effective_date}}</span>
+          </div>
+        </div>
+        <div class="law-summary" v-if="row.summary">{{row.summary}}</div>
+        <div class="law-points" v-if="row.key_points">
+          <div class="points-label">核心要点：</div>
+          <div>{{row.key_points}}</div>
+        </div>
+      </div>
+      <el-empty v-if="!list.length && !loading" description="暂无数据"/>
+    </div>
+
+    <el-dialog v-model="dialog.show" :title="dialog.data&&dialog.data.name" width="720px">
+      <div v-if="dialog.data" class="law-detail">
+        <div class="detail-row"><span class="label">法规类型</span><span>{{dialog.data.doc_type}}</span></div>
+        <div class="detail-row"><span class="label">发布机关</span><span>{{dialog.data.issuing_authority}}</span></div>
+        <div class="detail-row"><span class="label">施行日期</span><span>{{dialog.data.effective_date||'-'}}</span></div>
+        <div class="detail-row"><span class="label">适用行业</span><span>{{dialog.data.industry}}</span></div>
+        <div class="detail-block">
+          <div class="block-title">适用范围</div>
+          <div class="block-content">{{dialog.data.applicable}}</div>
+        </div>
+        <div class="detail-block">
+          <div class="block-title">法规概述</div>
+          <div class="block-content">{{dialog.data.summary}}</div>
+        </div>
+        <div class="detail-block">
+          <div class="block-title">核心要点</div>
+          <div class="block-content">{{dialog.data.key_points}}</div>
+        </div>
+      </div>
+    </el-dialog>
+  </div>`
+};
+
+/* ====== 危险作业票管理 ====== */
+const WorkPermitComp = {
+  setup(){
+    const list = ref([]); const keyword = ref(''); const ptype = ref(''); const pstatus = ref('');
+    const year = ref(new Date().getFullYear());
+    const dialog = reactive({show:false,edit:null,data:defaultItem()});
+    function defaultItem(){ return {permit_type:'动火作业',risk_level:'一级',work_location:'',work_content:'',
+      contractor:'',workers:3,work_personnel:'',gas_test:'O2:%, CO:ppm, LEL:%',safety_measures:'',
+      permit_holder:'',guardian:'',approver:'',apply_date:new Date().toISOString().slice(0,10),
+      start_time:'',end_time:'',status:'pending'} }
+    const API = '/api/secondary/work-permit';
+    const load = async()=>{
+      let u = API + '/list';
+      const p = new URLSearchParams();
+      if(keyword.value) p.set('keyword', keyword.value);
+      if(ptype.value) p.set('permit_type', ptype.value);
+      if(pstatus.value) p.set('status', pstatus.value);
+      p.set('year', year.value);
+      try{ list.value = await api.get(u+'?'+p.toString()) || []; }catch(e){}
+    };
+    const openAdd = ()=>{dialog.edit=null;dialog.data=defaultItem();dialog.show=true;};
+    const openEdit = (row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save = async()=>{
+      if(!dialog.data.work_location){ElementPlus.ElMessage.warning('请填写作业地点');return;}
+      try{
+        if(dialog.edit){await api.put(API+'/'+dialog.edit, dialog.data);}
+        else{await api.post(API, dialog.data);}
+        dialog.show=false; load(); ElementPlus.ElMessage.success('保存成功');
+      }catch(e){}
+    };
+    const remove = async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确认删除该作业票？','警告',{type:'warning'});
+        await api.del(API+'/'+row.id); load(); ElementPlus.ElMessage.success('已删除');}catch(e){}
+    };
+    const statusMap = {pending:{t:'待审批',c:'tag-gray'},approved:{t:'已批准',c:'tag-blue'},in_progress:{t:'作业中',c:'tag-green'},completed:{t:'已完成',c:'tag-gray'},rejected:{t:'已驳回',c:'tag-red'},cancelled:{t:'已取消',c:'tag-gray'}};
+    const typeColors = {'动火作业':'#dc2626','有限空间作业':'#7c3aed','高处作业':'#f59e0b','吊装作业':'#0891b2','临时用电':'#059669','盲板抽堵':'#6366f1','动土作业':'#9333ea','断路作业':'#be185d'};
+    const needsGasTest = ()=>{ var t = dialog.data.permit_type; return t==='有限空间作业' || t==='动火作业'; };
+    onMounted(load);
+    return {list,keyword,ptype,pstatus,year,dialog,load,openAdd,openEdit,save,remove,statusMap,typeColors,needsGasTest};
+  },
+  template:`
+  <div>
+    <div class="page-head"><div><h2>危险作业票管理</h2><div class="sub">动火/有限空间/高处/吊装等八大特殊作业票证管理，气体检测、监护、审批全流程</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">申请作业票</el-button></div>
+    <div class="filter-bar">
+      <el-select v-model="year" style="width:100px" @change="load"><el-option :value="2025" label="2025"/><el-option :value="2026" label="2026"/><el-option :value="2027" label="2027"/></el-select>
+      <el-select v-model="ptype" placeholder="作业类型" clearable style="width:140px" @change="load">
+        <el-option v-for="t in ['动火作业','有限空间作业','高处作业','吊装作业','临时用电','盲板抽堵','动土作业','断路作业']" :key="t" :value="t"/>
+      </el-select>
+      <el-select v-model="pstatus" placeholder="状态" clearable style="width:110px" @change="load">
+        <el-option v-for="s in ['pending','approved','in_progress','completed','rejected']" :key="s" :value="s">{{statusMap[s]&&statusMap[s].t}}</el-option>
+      </el-select>
+      <el-input v-model="keyword" placeholder="票号/地点/承包商" style="width:240px" clearable @clear="load" @keyup.enter="load"/>
+      <el-button @click="load">查询</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe size="small">
+        <el-table-column label="票号" width="170" prop="permit_no">
+          <template #default="{row}"><b style="font-size:12px;color:#0f172a">{{row.permit_no}}</b></template>
+        </el-table-column>
+        <el-table-column label="类型/级别" width="130">
+          <template #default="{row}">
+            <el-tag size="small" :color="typeColors[row.permit_type]" effect="light">{{row.permit_type}}</el-tag>
+            <div style="font-size:11px;color:#94a3b8;margin-top:2px">{{row.risk_level||''}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="work_location" label="作业地点/内容" min-width="220">
+          <template #default="{row}">
+            <div style="font-weight:500">{{row.work_location}}</div>
+            <div style="font-size:11.5px;color:#64748b;margin-top:2px">{{row.work_content}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="承包商" prop="contractor" width="180"/>
+        <el-table-column label="负责人/监护人" width="160">
+          <template #default="{row}">
+            <div style="font-size:12px">{{row.permit_holder}} / {{row.guardian}}</div>
+            <div style="font-size:11px;color:#94a3b8">审批：{{row.approver}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="申请日期" width="110" prop="apply_date"/>
+        <el-table-column label="状态" width="100">
+          <template #default="{row}"><span class="el-tag" :class="(statusMap[row.status]||{}).c||'tag-gray'" effect="light">{{(statusMap[row.status]||{}).t||row.status}}</span></template>
+        </el-table-column>
+        <el-table-column label="操作" width="140" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑作业票':'申请作业票'" width="760px">
+      <el-form :model="dialog.data" label-width="100px">
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="作业类型">
+          <el-select v-model="dialog.data.permit_type" style="width:100%"><el-option v-for="t in ['动火作业','有限空间作业','高处作业','吊装作业','临时用电','盲板抽堵','动土作业','断路作业']" :key="t" :value="t"/></el-select>
+        </el-form-item></el-col><el-col :span="12"><el-form-item label="风险级别">
+          <el-select v-model="dialog.data.risk_level" style="width:100%"><el-option v-for="l in ['特级','一级','二级','一般']" :key="l" :value="l"/></el-select>
+        </el-form-item></el-col></el-row>
+        <el-form-item label="作业地点"><el-input v-model="dialog.data.work_location" placeholder="如：1号水泥库下料口"/></el-form-item>
+        <el-form-item label="作业内容"><el-input v-model="dialog.data.work_content" type="textarea" :rows="2"/></el-form-item>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="承包商"><el-input v-model="dialog.data.contractor"/></el-form-item></el-col>
+        <el-col :span="12"><el-form-item label="作业人数"><el-input-number v-model="dialog.data.workers" :min="1" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-form-item label="作业人员"><el-input v-model="dialog.data.work_personnel" placeholder="张三(焊工), 李四(辅助)..."/></el-form-item>
+        <el-form-item label="气体检测" v-if="needsGasTest()"><el-input v-model="dialog.data.gas_test" placeholder="O2:20.9%, CO:3ppm, LEL:5%" type="textarea"/></el-form-item>
+        <el-form-item label="安全措施"><el-input v-model="dialog.data.safety_measures" type="textarea" :rows="3"/></el-form-item>
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="作业负责人"><el-input v-model="dialog.data.permit_holder"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="监护人"><el-input v-model="dialog.data.guardian"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="审批人"><el-input v-model="dialog.data.approver"/></el-form-item></el-col></el-row>
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="申请日期"><el-date-picker v-model="dialog.data.apply_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="开始时间"><el-date-picker v-model="dialog.data.start_time" type="datetime" value-format="YYYY-MM-DDTHH:mm" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="结束时间"><el-date-picker v-model="dialog.data.end_time" type="datetime" value-format="YYYY-MM-DDTHH:mm" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-form-item label="状态"><el-select v-model="dialog.data.status" style="width:100%"><el-option v-for="s in ['pending','approved','in_progress','completed','rejected']" :key="s" :value="s">{{statusMap[s]&&statusMap[s].t}}</el-option></el-select></el-form-item>
+      </el-form>
+      <template #footer><el-button @click="dialog.show=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template>
+    </el-dialog>
+  </div>`,
+};
+
+/* ====== 安全投入台账 ====== */
+const SafetyCostComp = {
+  setup(){
+    const list = ref([]); const keyword = ref(''); const category = ref('');
+    const year = ref(new Date().getFullYear()); const stats = ref({total_amount:0, cat_stats:{}});
+    const dialog = reactive({show:false,edit:null,data:defaultItem()});
+    function defaultItem(){ return {item:'',category:'教育培训',amount:0,occur_date:new Date().toISOString().slice(0,10),payer:'',voucher_no:'',remark:''} }
+    const API = '/api/secondary/safety-cost';
+    const load = async()=>{
+      let u = API + '/list';
+      const p = new URLSearchParams();
+      if(keyword.value) p.set('keyword', keyword.value);
+      if(category.value) p.set('category', category.value);
+      p.set('year', year.value);
+      try{ const d = await api.get(u+'?'+p.toString()); list.value = d.list||[]; stats.value = {total_amount:d.total_amount||0, cat_stats:d.cat_stats||{}}; }catch(e){}
+    };
+    const openAdd = ()=>{dialog.edit=null;dialog.data=defaultItem();dialog.show=true;};
+    const openEdit = (row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save = async()=>{
+      if(!dialog.data.item){ElementPlus.ElMessage.warning('请填写费用项目');return;}
+      try{
+        if(dialog.edit){await api.put(API+'/'+dialog.edit, dialog.data);}
+        else{await api.post(API, dialog.data);}
+        dialog.show=false; load(); ElementPlus.ElMessage.success('保存成功');
+      }catch(e){}
+    };
+    const remove = async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确认删除？','警告',{type:'warning'});
+        await api.del(API+'/'+row.id); load();}catch(e){}
+    };
+    const catColors = {'教育培训':'#2563eb','防护用品':'#059669','隐患整改':'#dc2626','应急演练':'#7c3aed','检测检验':'#0891b2','职业健康':'#be185d','其他':'#64748b'};
+    const fmtMoney = (v)=>{ const n = Number(v)||0; return n.toLocaleString('zh-CN',{minimumFractionDigits:2}); };
+    onMounted(load);
+    return {list,keyword,category,year,stats,dialog,load,openAdd,openEdit,save,remove,catColors,fmtMoney};
+  },
+  template:`
+  <div>
+    <div class="page-head"><div><h2>安全投入台账</h2><div class="sub">按法规要求足额提取和使用安全生产费用，支持按类别统计</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">新增投入</el-button></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px">
+      <div class="card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe)"><div style="font-size:12px;color:#64748b">年度累计投入</div><div style="font-size:26px;font-weight:700;color:#1d4ed8;margin-top:4px">¥{{fmtMoney(stats.total_amount)}}</div></div>
+      <div v-for="(amt,c) in stats.cat_stats" :key="c" class="card" :style="{borderLeft:'4px solid '+catColors[c]||'#64748b'}">
+        <div style="font-size:12px;color:#64748b">{{c}}</div>
+        <div style="font-size:18px;font-weight:600;color:#0f172a;margin-top:3px">¥{{fmtMoney(amt)}}</div>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <el-select v-model="year" style="width:100px" @change="load"><el-option :value="2025" label="2025"/><el-option :value="2026" label="2026"/><el-option :value="2027" label="2027"/></el-select>
+      <el-select v-model="category" placeholder="全部类别" clearable style="width:130px" @change="load">
+        <el-option v-for="c in ['教育培训','防护用品','隐患整改','应急演练','检测检验','职业健康','其他']" :key="c" :value="c"/>
+      </el-select>
+      <el-input v-model="keyword" placeholder="搜索项目" style="width:240px" clearable @clear="load" @keyup.enter="load"/>
+      <el-button @click="load">查询</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe size="small">
+        <el-table-column prop="item" label="费用项目" min-width="240"/>
+        <el-table-column label="类别" width="110"><template #default="{row}"><el-tag size="small" :color="catColors[row.category]||'#64748b'" effect="light">{{row.category}}</el-tag></template></el-table-column>
+        <el-table-column prop="amount" label="金额(¥)" width="120"><template #default="{row}"><b style="color:#dc2626">{{fmtMoney(row.amount)}}</b></template></el-table-column>
+        <el-table-column prop="occur_date" label="日期" width="110"/>
+        <el-table-column prop="payer" label="报销人" width="100"/>
+        <el-table-column prop="voucher_no" label="凭证号" width="140"/>
+        <el-table-column label="操作" width="140" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑投入':'新增投入'" width="560px">
+      <el-form :model="dialog.data" label-width="100px">
+        <el-form-item label="费用项目"><el-input v-model="dialog.data.item"/></el-form-item>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="类别"><el-select v-model="dialog.data.category" style="width:100%"><el-option v-for="c in ['教育培训','防护用品','隐患整改','应急演练','检测检验','职业健康','其他']" :key="c" :value="c"/></el-select></el-form-item></el-col>
+        <el-col :span="12"><el-form-item label="金额(¥)"><el-input-number v-model="dialog.data.amount" :min="0" :precision="2" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="发生日期"><el-date-picker v-model="dialog.data.occur_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="报销人"><el-input v-model="dialog.data.payer"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="凭证号"><el-input v-model="dialog.data.voucher_no"/></el-form-item></el-col></el-row>
+        <el-form-item label="备注"><el-input v-model="dialog.data.remark" type="textarea" :rows="2"/></el-form-item>
+      </el-form>
+      <template #footer><el-button @click="dialog.show=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template>
+    </el-dialog>
+  </div>`,
+};
+
+/* ====== 事故记录管理 ====== */
+const AccidentComp = {
+  setup(){
+    const list = ref([]); const keyword = ref(''); const level = ref(''); const atype = ref('');
+    const year = ref(new Date().getFullYear());
+    const dialog = reactive({show:false,edit:null,data:defaultItem()});
+    function defaultItem(){ return {accident_no:'',level:'一般事故',type:'机械伤害',location:'',time:'',deaths:0,injuries:0,direct_loss:0,brief:'',cause_analysis:'',rectify_measures:'',responsible:'',report_status:'pending',report_date:''} }
+    const API = '/api/secondary/accident';
+    const load = async()=>{
+      const p = new URLSearchParams();
+      if(keyword.value) p.set('keyword', keyword.value);
+      if(level.value) p.set('level', level.value);
+      if(atype.value) p.set('type', atype.value);
+      p.set('year', year.value);
+      try{ const d = await api.get(API+'/list?'+p.toString()); list.value = d.list || []; }catch(e){}
+    };
+    const openAdd = ()=>{dialog.edit=null;dialog.data={...defaultItem(),accident_no:'AC-'+new Date().getFullYear()+String(Math.floor(Math.random()*10000)).padStart(6,'0')};dialog.show=true;};
+    const openEdit = (row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save = async()=>{
+      if(!dialog.data.location){ElementPlus.ElMessage.warning('请填写事故地点');return;}
+      try{
+        if(dialog.edit){await api.put(API+'/'+dialog.edit, dialog.data);}
+        else{await api.post(API, dialog.data);}
+        dialog.show=false; load(); ElementPlus.ElMessage.success('保存成功');
+      }catch(e){}
+    };
+    const remove = async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确认删除？','警告',{type:'warning'});
+        await api.del(API+'/'+row.id); load();}catch(e){}
+    };
+    const levelColors = {'特别重大':'#991b1b','重大':'#dc2626','较大':'#ea580c','一般事故':'#f59e0b','轻微事故':'#0891b2','未遂事故':'#64748b'};
+    onMounted(load);
+    return {list,keyword,level,atype,year,dialog,load,openAdd,openEdit,save,remove,levelColors};
+  },
+  template:`
+  <div>
+    <div class="page-head"><div><h2>事故记录管理</h2><div class="sub">严格按照《生产安全事故报告和调查处理条例》进行事故登记、调查、整改闭环</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">登记事故</el-button></div>
+    <div class="filter-bar">
+      <el-select v-model="year" style="width:100px" @change="load"><el-option :value="2025" label="2025"/><el-option :value="2026" label="2026"/></el-select>
+      <el-select v-model="level" placeholder="事故等级" clearable style="width:130px" @change="load">
+        <el-option v-for="l in ['特别重大','重大','较大','一般事故','轻微事故','未遂事故']" :key="l" :value="l"/>
+      </el-select>
+      <el-select v-model="atype" placeholder="事故类型" clearable style="width:130px" @change="load">
+        <el-option v-for="t in ['物体打击','车辆伤害','机械伤害','起重伤害','灼烫','高处坠落','坍塌','触电','中毒窒息','其他伤害']" :key="t" :value="t"/>
+      </el-select>
+      <el-input v-model="keyword" placeholder="搜索地点/简述" style="width:240px" clearable @clear="load" @keyup.enter="load"/>
+      <el-button @click="load">查询</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe size="small">
+        <el-table-column prop="accident_no" label="编号" width="170">
+          <template #default="{row}"><b style="color:#0f172a">{{row.accident_no}}</b></template>
+        </el-table-column>
+        <el-table-column label="等级/类型" width="150">
+          <template #default="{row}">
+            <el-tag size="small" :color="levelColors[row.level]||'#64748b'" effect="light">{{row.level}}</el-tag>
+            <div style="font-size:11px;color:#94a3b8;margin-top:2px">{{row.type}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="事故地点/简述" min-width="280">
+          <template #default="{row}">
+            <div style="font-weight:500">{{row.location}}</div>
+            <div style="font-size:11.5px;color:#64748b;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{row.brief}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="伤亡/损失" width="130">
+          <template #default="{row}">
+            <span style="font-size:12px">亡{{row.deaths}} / 伤{{row.injuries}}</span><br>
+            <span style="font-size:11px;color:#94a3b8">直接损失¥{{(row.direct_loss||0).toLocaleString()}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="time" label="发生时间" width="160"/>
+        <el-table-column label="处理状态" width="100">
+          <template #default="{row}">
+            <el-tag size="small" :type="row.report_status==='closed'?'success':row.report_status==='investigated'?'warning':'info'" effect="light">
+              {{row.report_status==='closed'?'已结案':row.report_status==='investigated'?'调查中':'待上报'}}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="140" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑事故记录':'登记事故'" width="800px">
+      <el-form :model="dialog.data" label-width="100px">
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="事故编号"><el-input v-model="dialog.data.accident_no"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="事故等级"><el-select v-model="dialog.data.level" style="width:100%"><el-option v-for="l in ['特别重大','重大','较大','一般事故','轻微事故','未遂事故']" :key="l" :value="l"/></el-select></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="事故类型"><el-select v-model="dialog.data.type" style="width:100%"><el-option v-for="t in ['物体打击','车辆伤害','机械伤害','起重伤害','灼烫','高处坠落','坍塌','触电','中毒窒息','其他伤害']" :key="t" :value="t"/></el-select></el-form-item></el-col></el-row>
+        <el-form-item label="事故地点"><el-input v-model="dialog.data.location"/></el-form-item>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="发生时间"><el-date-picker v-model="dialog.data.time" type="datetime" value-format="YYYY-MM-DDTHH:mm" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="4"><el-form-item label="死亡"><el-input-number v-model="dialog.data.deaths" :min="0" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="4"><el-form-item label="受伤"><el-input-number v-model="dialog.data.injuries" :min="0" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="4"><el-form-item label="直接损失(¥)"><el-input-number v-model="dialog.data.direct_loss" :min="0" :precision="2" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-form-item label="事故简述"><el-input v-model="dialog.data.brief" type="textarea" :rows="2"/></el-form-item>
+        <el-form-item label="原因分析"><el-input v-model="dialog.data.cause_analysis" type="textarea" :rows="3"/></el-form-item>
+        <el-form-item label="整改措施"><el-input v-model="dialog.data.rectify_measures" type="textarea" :rows="3"/></el-form-item>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="责任人"><el-input v-model="dialog.data.responsible"/></el-form-item></el-col>
+        <el-col :span="6"><el-form-item label="处理状态"><el-select v-model="dialog.data.report_status" style="width:100%"><el-option value="pending" label="待上报"/><el-option value="reported" label="已上报"/><el-option value="investigated" label="调查中"/><el-option value="closed" label="已结案"/></el-select></el-form-item></el-col>
+        <el-col :span="6"><el-form-item label="上报日期"><el-date-picker v-model="dialog.data.report_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col></el-row>
+      </el-form>
+      <template #footer><el-button @click="dialog.show=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template>
+    </el-dialog>
+  </div>`,
+};
+
+/* ====== 承包商资质档案 ====== */
+const ContractorComp = {
+  setup(){
+    const list = ref([]); const keyword = ref(''); const status = ref('');
+    const dialog = reactive({show:false,edit:null,data:defaultItem()});
+    function defaultItem(){ return {name:'',contact:'',phone:'',business_scope:'',has_safety_license:true,safety_license_no:'',safety_license_expire:'',qualification:'',last_3y_accidents:'',special_workers_count:0,workers_count:0,enter_date:'',expire_date:'',safety_agreement:true,safety_trained:false,status:'active',performance_score:80,remark:''} }
+    const API = '/api/secondary/contractor';
+    const load = async()=>{
+      const p = new URLSearchParams();
+      if(keyword.value) p.set('keyword', keyword.value);
+      if(status.value) p.set('status', status.value);
+      try{ list.value = await api.get(API+'/list?'+p.toString()) || []; }catch(e){}
+    };
+    const openAdd = ()=>{dialog.edit=null;dialog.data=defaultItem();dialog.show=true;};
+    const openEdit = (row)=>{dialog.edit=row.id;dialog.data={...row};dialog.show=true;};
+    const save = async()=>{
+      if(!dialog.data.name){ElementPlus.ElMessage.warning('请填写承包商名称');return;}
+      try{
+        if(dialog.edit){await api.put(API+'/'+dialog.edit, dialog.data);}
+        else{await api.post(API, dialog.data);}
+        dialog.show=false; load(); ElementPlus.ElMessage.success('保存成功');
+      }catch(e){}
+    };
+    const remove = async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('确认删除？','警告',{type:'warning'});
+        await api.del(API+'/'+row.id); load();}catch(e){}
+    };
+    const scoreColor = (s)=> s>=90?'#059669':s>=80?'#2563eb':s>=70?'#f59e0b':'#dc2626';
+    onMounted(load);
+    return {list,keyword,status,dialog,load,openAdd,openEdit,save,remove,scoreColor};
+  },
+  template:`
+  <div>
+    <div class="page-head"><div><h2>承包商资质档案</h2><div class="sub">外包外委承包商准入审查、安全协议、三级安全教育、履约评价全流程管理</div></div>
+      <el-button type="primary" @click="openAdd" :icon="Plus">新增承包商</el-button></div>
+    <div class="filter-bar">
+      <el-select v-model="status" placeholder="全部状态" clearable style="width:130px" @change="load">
+        <el-option value="active" label="合作中"/><el-option value="pending" label="待审核"/><el-option value="inactive" label="已终止"/>
+      </el-select>
+      <el-input v-model="keyword" placeholder="搜索承包商名称/联系人" style="width:240px" clearable @clear="load" @keyup.enter="load"/>
+      <el-button @click="load">查询</el-button>
+    </div>
+    <div class="card">
+      <el-table :data="list" border stripe size="small">
+        <el-table-column prop="name" label="承包商名称" min-width="200">
+          <template #default="{row}"><b style="color:#0f172a">{{row.name}}</b></template>
+        </el-table-column>
+        <el-table-column label="联系人/电话" width="170">
+          <template #default="{row}">
+            <div>{{row.contact}}</div>
+            <div style="font-size:11px;color:#64748b">{{row.phone}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="资质/许可" width="180">
+          <template #default="{row}">
+            <el-tag size="small" v-if="row.has_safety_license" type="success" effect="light">有安全生产许可证</el-tag>
+            <el-tag size="small" v-else type="danger" effect="light">无安全许可证</el-tag>
+            <div style="font-size:11px;color:#64748b;margin-top:2px">{{row.qualification}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="安全协议/培训" width="140">
+          <template #default="{row}">
+            <span :style="{color:row.safety_agreement?'#059669':'#dc2626',fontSize:'12px'}">{{row.safety_agreement?'✓已签协议':'✗未签协议'}}</span><br>
+            <span :style="{color:row.safety_trained?'#059669':'#dc2626',fontSize:'12px'}">{{row.safety_trained?'✓已三级培训':'✗未培训'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="人员规模" width="120">
+          <template #default="{row}"><span style="font-size:12px">总{{row.workers_count}}人</span><br><span style="font-size:11px;color:#64748b">特种{{row.special_workers_count}}人</span></template>
+        </el-table-column>
+        <el-table-column label="合同期" width="160">
+          <template #default="{row}"><span style="font-size:12px">{{row.enter_date||'—'}} ~ {{row.expire_date||'—'}}</span></template>
+        </el-table-column>
+        <el-table-column label="状态/评分" width="140">
+          <template #default="{row}">
+            <el-tag size="small" v-if="row.status==='active'" type="success" effect="light">合作中</el-tag>
+            <el-tag size="small" v-else-if="row.status==='pending'" type="warning" effect="light">待审核</el-tag>
+            <el-tag size="small" v-else type="info" effect="light">已终止</el-tag>
+            <div style="font-size:16px;font-weight:700;margin-top:2px" :style="{color:scoreColor(row.performance_score)}">{{row.performance_score}}分</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="140" fixed="right">
+          <template #default="{row}">
+            <el-button size="small" link type="primary" @click="openEdit(row)">编辑</el-button>
+            <el-button size="small" link type="danger" @click="remove(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialog.show" :title="dialog.edit?'编辑承包商':'新增承包商'" width="760px">
+      <el-form :model="dialog.data" label-width="120px">
+        <el-row :gutter="12"><el-col :span="14"><el-form-item label="承包商名称"><el-input v-model="dialog.data.name"/></el-form-item></el-col>
+        <el-col :span="10"><el-form-item label="联系人"><el-input v-model="dialog.data.contact"/></el-form-item></el-col></el-row>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="联系电话"><el-input v-model="dialog.data.phone"/></el-form-item></el-col>
+        <el-col :span="12"><el-form-item label="资质等级"><el-input v-model="dialog.data.qualification" placeholder="如：建筑工程总承包贰级"/></el-form-item></el-col></el-row>
+        <el-form-item label="经营范围"><el-input v-model="dialog.data.business_scope" type="textarea" :rows="2"/></el-form-item>
+        <el-divider content-position="left">安全生产许可证</el-divider>
+        <el-form-item label="是否有许可证">
+          <el-switch v-model="dialog.data.has_safety_license" active-text="是" inactive-text="否"/>
+        </el-form-item>
+        <el-row :gutter="12" v-if="dialog.data.has_safety_license"><el-col :span="14"><el-form-item label="许可证号"><el-input v-model="dialog.data.safety_license_no"/></el-form-item></el-col>
+        <el-col :span="10"><el-form-item label="有效期至"><el-date-picker v-model="dialog.data.safety_license_expire" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-divider content-position="left">人员与合作</el-divider>
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="总人数"><el-input-number v-model="dialog.data.workers_count" :min="0" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="特种作业人数"><el-input-number v-model="dialog.data.special_workers_count" :min="0" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="履约评分"><el-input-number v-model="dialog.data.performance_score" :min="0" :max="100" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-row :gutter="12"><el-col :span="12"><el-form-item label="入场日期"><el-date-picker v-model="dialog.data.enter_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col>
+        <el-col :span="12"><el-form-item label="合同到期"><el-date-picker v-model="dialog.data.expire_date" type="date" value-format="YYYY-MM-DD" style="width:100%"/></el-form-item></el-col></el-row>
+        <el-row :gutter="12"><el-col :span="8"><el-form-item label="已签安全协议"><el-switch v-model="dialog.data.safety_agreement" active-text="是" inactive-text="否"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="已三级教育"><el-switch v-model="dialog.data.safety_trained" active-text="是" inactive-text="否"/></el-form-item></el-col>
+        <el-col :span="8"><el-form-item label="状态"><el-select v-model="dialog.data.status" style="width:100%"><el-option value="active" label="合作中"/><el-option value="pending" label="待审核"/><el-option value="inactive" label="已终止"/></el-select></el-form-item></el-col></el-row>
+        <el-form-item label="近3年事故"><el-input v-model="dialog.data.last_3y_accidents" type="textarea" :rows="2"/></el-form-item>
+        <el-form-item label="备注"><el-input v-model="dialog.data.remark" type="textarea" :rows="2"/></el-form-item>
+      </el-form>
+      <template #footer><el-button @click="dialog.show=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template>
+    </el-dialog>
+  </div>`,
+};
+
+const SystemComp = {
+  props:['user'],
+  setup(props){
+    const tab = ref('users');
+    const users = ref([]);
+    const roles = ref([]);
+    const permissions = ref([]);
+    const loading = ref(true);
+    const canEditRole = computed(function(){
+      const p = props.user && props.user.permissions;
+      if(!p) return false;
+      return p.indexOf('system.role') >= 0;
+    });
+
+    const userDialog = reactive({show:false,edit:null,data:defaultUser()});
+    function defaultUser(){return{username:'',real_name:'',role_id:1,department:'',phone:'',password:'123456'};}
+
+    const roleDialog = reactive({show:false,edit:null,data:defaultRole()});
+    function defaultRole(){return{name:'',description:'',permissions:[]};}
+
+    const load = async()=>{
+      loading.value=true;
+      try{
+        const [u,r,p]=await Promise.all([
+          api.get('/api/system/users'),
+          api.get('/api/system/roles'),
+          api.get('/api/system/permissions'),
+        ]);
+        users.value=u||[];
+        roles.value=r||[];
+        permissions.value=p||[];
+      }catch(e){}
+      loading.value=false;
+    };
+
+    const roleName = (rid)=>{ const r=roles.value.find(function(x){return x.id===rid;}); return r?r.name:'未知'; };
+
+    const openAddUser=()=>{userDialog.edit=null;userDialog.data=defaultUser();userDialog.show=true;};
+    const openEditUser=(row)=>{userDialog.edit=row.id;userDialog.data={...row,password:''};userDialog.show=true;};
+    const saveUser=async()=>{
+      if(!userDialog.data.username||!userDialog.data.real_name){ElementPlus.ElMessage.warning('账号和姓名必填');return;}
+      try{
+        if(userDialog.edit){await api.put('/api/system/user/'+userDialog.edit,userDialog.data);}
+        else{await api.post('/api/system/user/',userDialog.data);}
+        ElementPlus.ElMessage.success('已保存');userDialog.show=false;load();
+      }catch(e){}
+    };
+    const removeUser=async(row)=>{
+      if(row.username==='admin'){ElementPlus.ElMessage.warning('不能删除超级管理员');return;}
+      try{await ElementPlus.ElMessageBox.confirm('确定删除用户？','确认',{type:'warning'});
+        await api.del('/api/system/user/'+row.id);ElementPlus.ElMessage.success('已删除');load();}catch(e){}
+    };
+    const resetPwd=async(row)=>{
+      try{await ElementPlus.ElMessageBox.prompt('重置密码为','重置密码',{inputValue:'123456'}).then(async function(res){
+        await api.put('/api/system/user/'+row.id,{password:res.value});ElementPlus.ElMessage.success('已重置');});
+      }catch(e){}
+    };
+
+    const openAddRole=()=>{roleDialog.edit=null;roleDialog.data=defaultRole();roleDialog.show=true;};
+    const openEditRole=(row)=>{roleDialog.edit=row.id;roleDialog.data={name:row.name,description:row.description,permissions:(row.permissions||[]).slice()};roleDialog.show=true;};
+    const saveRole=async()=>{
+      if(!roleDialog.data.name){ElementPlus.ElMessage.warning('角色名必填');return;}
+      try{
+        if(roleDialog.edit){await api.put('/api/system/roles/'+roleDialog.edit,roleDialog.data);}
+        else{await api.post('/api/system/roles/',roleDialog.data);}
+        ElementPlus.ElMessage.success('已保存');roleDialog.show=false;load();
+      }catch(e){}
+    };
+    const removeRole=async(row)=>{
+      try{await ElementPlus.ElMessageBox.confirm('删除角色将影响拥有该角色的用户，确定？','确认',{type:'warning'});
+        await api.del('/api/system/roles/'+row.id);ElementPlus.ElMessage.success('已删除');load();}catch(e){}
+    };
+    const togglePerm = (code)=>{
+      const list = roleDialog.data.permissions;
+      const idx = list.indexOf(code);
+      if(idx>=0){list.splice(idx,1);}else{list.push(code);}
+    };
+    const hasPerm = (code)=>{ return roleDialog.data.permissions.indexOf(code) >= 0; };
+    const rolePermCount = (row)=>{ return (row.permissions||[]).length; };
+
+    const groupedPerms = computed(function(){
+      const groups = {};
+      permissions.value.forEach(function(p){
+        const m = p.module || '其他';
+        if(!groups[m]) groups[m]=[];
+        groups[m].push(p);
+      });
+      return groups;
+    });
+    const permModules = computed(function(){ return Object.keys(groupedPerms.value); });
+
+    onMounted(load);
+    return {tab,users,roles,permissions,loading,canEditRole,
+      userDialog,openAddUser,openEditUser,saveUser,removeUser,resetPwd,
+      roleDialog,openAddRole,openEditRole,saveRole,removeRole,togglePerm,hasPerm,rolePermCount,
+      groupedPerms,permModules,roleName,load};
+  },
+  template:`
+  <div>
+    <div class="page-head">
+      <div><h2>系统设置</h2><div class="sub">用户账号、角色权限配置 — 支持多系统扩展接入</div></div>
+    </div>
+    <el-tabs v-model="tab">
+      <el-tab-pane label="用户管理" name="users">
+        <div class="card" style="margin-bottom:12px">
+          <el-button type="primary" @click="openAddUser" :icon="Plus" size="small">新增用户</el-button>
+        </div>
+        <div class="card">
+          <el-table :data="users" border stripe v-loading="loading" size="small">
+            <el-table-column type="index" width="50"/>
+            <el-table-column prop="username" label="账号" width="120"/>
+            <el-table-column prop="real_name" label="姓名" width="110"/>
+            <el-table-column label="角色" width="130">
+              <template #default="{row}">
+                <el-tag effect="plain" size="small">{{roleName(row.role_id)}}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="department" label="部门" width="130"/>
+            <el-table-column prop="phone" label="电话" width="130"/>
+            <el-table-column label="权限数" width="80" align="center">
+              <template #default="{row}">
+                <span style="color:#3b82f6">{{(row.permissions||[]).length}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="220" fixed="right">
+              <template #default="{row}">
+                <el-button size="small" link type="primary" @click="openEditUser(row)">编辑</el-button>
+                <el-button size="small" link type="warning" @click="resetPwd(row)">重置密码</el-button>
+                <el-button size="small" link type="danger" @click="removeUser(row)" :disabled="row.username==='admin'">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+
+      <el-tab-pane label="角色权限" name="roles">
+        <div class="card" style="margin-bottom:12px">
+          <el-button type="primary" @click="openAddRole" :icon="Plus" size="small" :disabled="!canEditRole">新增角色</el-button>
+          <span v-if="!canEditRole" style="color:#94a3b8;font-size:12px;margin-left:12px">需「角色权限管理」权限</span>
+        </div>
+        <div class="card">
+          <el-table :data="roles" border stripe v-loading="loading" size="small">
+            <el-table-column type="index" width="50"/>
+            <el-table-column prop="name" label="角色" width="150"/>
+            <el-table-column prop="description" label="说明" min-width="200"/>
+            <el-table-column label="已分配权限" width="120" align="center">
+              <template #default="{row}">
+                <el-tag size="small" type="info">{{rolePermCount(row)}} 项</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="180" fixed="right">
+              <template #default="{row}">
+                <el-button size="small" link type="primary" @click="openEditRole(row)">编辑权限</el-button>
+                <el-button size="small" link type="danger" @click="removeRole(row)" :disabled="!canEditRole">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-tab-pane>
+
+      <el-tab-pane label="权限总览" name="permissions">
+        <div class="card">
+          <div v-for="mod in permModules" :key="mod" style="margin-bottom:16px">
+            <div style="font-weight:600;color:#475569;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #e2e8f0">{{mod}} ({{groupedPerms[mod].length}}项)</div>
+            <el-tag v-for="p in groupedPerms[mod]" :key="p.code" size="small" effect="plain" style="margin:3px 5px 3px 0">
+              {{p.name}} <span style="color:#94a3b8;font-size:11px">[{{p.code}}]</span>
+            </el-tag>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
+    <el-dialog v-model="userDialog.show" :title="userDialog.edit?'编辑用户':'新增用户'" width="500px" :close-on-click-modal="false">
+      <el-form :model="userDialog.data" label-width="80px" size="default">
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="账号"><el-input v-model="userDialog.data.username" :disabled="!!userDialog.edit"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="姓名"><el-input v-model="userDialog.data.real_name"/></el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="角色">
+            <el-select v-model="userDialog.data.role_id" style="width:100%">
+              <el-option v-for="r in roles" :key="r.id" :value="r.id" :label="r.name"/>
+            </el-select>
+          </el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="部门"><el-input v-model="userDialog.data.department"/></el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="电话"><el-input v-model="userDialog.data.phone"/></el-form-item></el-col>
+          <el-col :span="12"><el-form-item :label="userDialog.edit?'新密码':'初始密码'">
+            <el-input v-model="userDialog.data.password" type="password" :placeholder="userDialog.edit?'留空不修改':'默认 123456'" show-password/>
+          </el-form-item></el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="userDialog.show=false">取消</el-button>
+        <el-button type="primary" @click="saveUser">保存</el-button>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="roleDialog.show" :title="roleDialog.edit?'编辑角色权限':'新增角色'" width="620px" :close-on-click-modal="false">
+      <el-form :model="roleDialog.data" label-width="80px">
+        <el-form-item label="角色名"><el-input v-model="roleDialog.data.name"/></el-form-item>
+        <el-form-item label="说明"><el-input v-model="roleDialog.data.description" type="textarea" :rows="2"/></el-form-item>
+      </el-form>
+      <div style="max-height:340px;overflow-y:auto;border-top:1px solid #e2e8f0;padding-top:12px">
+        <div v-for="mod in permModules" :key="mod" style="margin-bottom:12px">
+          <div style="font-size:12px;color:#64748b;margin-bottom:6px;font-weight:600">{{mod}}</div>
+          <el-checkbox v-for="p in groupedPerms[mod]" :key="p.code" :model-value="hasPerm(p.code)" @change="togglePerm(p.code)" size="default" style="margin:3px 10px 3px 0">
+            {{p.name}}
+          </el-checkbox>
+        </div>
+      </div>
+      <template #footer>
+        <el-button @click="roleDialog.show=false">取消</el-button>
+        <el-button type="primary" @click="saveRole">保存</el-button>
+      </template>
+    </el-dialog>
+  </div>`
+};
+
+/* ====== 主布局 ====== */
+const MainLayout = {
+  props:['user'],
+  emits:['logout'],
+  setup(props,{emit}){
+    const menuPermMap={
+      dashboard:'dashboard.view',
+      workplan:'workplan.view',
+      inspection:'inspection.view',
+      hazard:'hazard.view',
+      permit:'permit.view',
+      contractor:'contractor.view',
+      cost:'cost.view',
+      accident:'accident.view',
+      report:'report.view',
+      law:'law.view',
+      standard:'standard.view',
+      system:'system.user',
+    };
+    const allMenus=[
+      {key:'dashboard',icon:'📊',label:'首页看板'},
+      {key:'workplan',icon:'📋',label:'工作计划管理'},
+      {key:'inspection',icon:'🔍',label:'安全检查记录'},
+      {key:'hazard',icon:'⚠️',label:'隐患台账管理',badge:true},
+      {key:'permit',icon:'🔥',label:'危险作业票',badge:true},
+      {key:'contractor',icon:'🏗️',label:'承包商档案'},
+      {key:'cost',icon:'💰',label:'安全投入台账'},
+      {key:'accident',icon:'🚨',label:'事故记录'},
+      {key:'report',icon:'📈',label:'统计报表分析'},
+      {key:'law',icon:'📖',label:'法律法规库'},
+      {key:'standard',icon:'📚',label:'检查标准库'},
+      {key:'system',icon:'⚙️',label:'系统设置'},
+    ];
+    const userPerms = computed(function(){
+      const p = props.user && props.user.permissions;
+      return p || [];
+    });
+    const menus = computed(function(){
+      return allMenus.filter(function(m){
+        const code = menuPermMap[m.key];
+        if(!code) return true;
+        return userPerms.value.indexOf(code) >= 0;
+      });
+    });
+    const pageMap={
+      dashboard:{title:'首页看板',sub:'安全生产与环保工作实时监控'},
+      workplan:{title:'工作计划管理',sub:'按月度/季度/年度跟踪安环部任务完成情况'},
+      inspection:{title:'安全检查记录',sub:'登记日常巡检、专项检查、季节性检查结果'},
+      hazard:{title:'隐患台账管理',sub:'隐患登记→整改→验收的闭环管理'},
+      permit:{title:'危险作业票管理',sub:'动火/有限空间/高处等八大特殊作业全流程票证管理'},
+      contractor:{title:'承包商资质档案',sub:'外包外委单位准入审查、安全协议、履约评价'},
+      cost:{title:'安全投入台账',sub:'按法规要求足额提取和使用安全生产费用的专项台账'},
+      accident:{title:'事故记录管理',sub:'事故报告、调查、整改闭环的全过程记录'},
+      report:{title:'统计报表分析',sub:'多维度数据分析，支持报表导出'},
+      law:{title:'法律法规库',sub:'工贸行业、劳动密集型企业安全生产法律法规索引与要点'},
+      standard:{title:'安全检查标准库',sub:'水泥企业安全生产标准化关键检查项'},
+      system:{title:'系统设置',sub:'用户管理与权限配置'},
+    };
+    const active = ref('dashboard');
+    const go = (k)=>active.value=k;
+    const doLogout = async()=>{
+      try{await api.post('/api/auth/logout');}catch(e){}
+      ElementPlus.ElMessage.success('已注销');emit('logout');
+    };
+    const onCommand = (c)=>{ if(c==='logout') doLogout(); };
+    const showName = computed(()=>props.user?.real_name||props.user?.username||'用户');
+    const showRole = computed(()=>props.user?.role_name||'用户');
+    return {menus,pageMap,active,go,doLogout,onCommand,showName,showRole};
+  },
+  template:`
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="logo-mini">安</div>
+        <div class="brand-text"><h2>Envsafe</h2><p>安全环保监督系统</p></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div v-for="m in menus" :key="m.key" class="nav-item" :class="{active:active===m.key}" @click="go(m.key)">
+          <span class="icon">{{m.icon}}</span><span>{{m.label}}</span>
+          <span class="nav-badge" v-if="m.badge">!</span>
+        </div>
+      </nav>
+      <div class="sidebar-footer">v1.0 · 水泥企业版</div>
+    </aside>
+    <section class="main">
+      <header class="topbar">
+        <div class="page-title">{{pageMap[active].title}}</div>
+        <div class="page-sub">{{pageMap[active].sub}}</div>
+        <div class="topbar-spacer"></div>
+        <el-dropdown class="top-user" trigger="click" @command="onCommand">
+          <div class="el-dropdown-link">
+            <el-avatar :size="34">{{showName[0]}}</el-avatar>
+            <div class="who"><div class="name">{{showName}}</div><div class="role">{{showRole}}</div></div>
+            <span style="color:#94a3b8">▾</span>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </header>
+      <main class="content">
+        <DashboardComp v-if="active==='dashboard'" :user="user"/>
+<WorkPlanComp v-else-if="active==='workplan'" :user="user"/>
+<InspectionComp v-else-if="active==='inspection'"/>
+<HazardComp v-else-if="active==='hazard'" :user="user"/>
+<WorkPermitComp v-else-if="active==='permit'"/>
+<ContractorComp v-else-if="active==='contractor'"/>
+<SafetyCostComp v-else-if="active==='cost'"/>
+<AccidentComp v-else-if="active==='accident'"/>
+<ReportComp v-else-if="active==='report'"/>
+<LawReferenceComp v-else-if="active==='law'"/>
+<StandardComp v-else-if="active==='standard'"/>
+<SystemComp v-else-if="active==='system'" :user="user"/>
+      </main>
+    </section>
+  </div>`
+};
+
+/* ====== 根组件 ====== */
+const App = {
+  setup(){
+    const user = ref(null);
+    const init = async()=>{
+      try{const u = await api.get('/api/auth/me'); user.value=u;}catch(e){}
+    };
+    onMounted(init);
+    const onLogin = (u)=>{user.value=u;};
+    const onLogout = ()=>{user.value=null;};
+    return {user,onLogin,onLogout};
+  },
+  template:`
+  <LoginComp v-if="!user" @success="onLogin"/>
+  <MainLayout v-else :user="user" @logout="onLogout"/>`
+};
+
+const app = createApp(App);
+app.config.errorHandler = (err,vm,info)=>{
+  console.error('[Vue Error]', info, err);
+  document.querySelectorAll('.vue-err-banner').forEach(n=>n.remove());
+  const d=document.createElement('div');
+  d.className='vue-err-banner';
+  d.style.cssText='position:fixed;top:0;left:0;right:0;background:#dc2626;color:#fff;padding:12px 20px;z-index:99999;font:13px/1.6 system-ui';
+  d.textContent='Vue错误 ['+info+']: '+err.message;
+  document.body.appendChild(d);
+};
+app.config.warnHandler = (msg,vm,trace)=>{console.warn('[Vue Warn]',msg,trace);};
+window.addEventListener('error',e=>{console.error('[Window Error]',e.message,e.filename,e.lineno);});
+for(const [k,v] of Object.entries(ElementPlusIconsVue)){
+  app.component(k, v);
+}
+const comps = {LoginComp,DashboardComp,WorkPlanComp,InspectionComp,HazardComp,WorkPermitComp,ContractorComp,SafetyCostComp,AccidentComp,ReportComp,LawReferenceComp,StandardComp,SystemComp,MainLayout};
+for(const [k,v] of Object.entries(comps)){
+  app.component(k, v);
+}
+app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+app.mount('#app');
+</script>
+</body>
+</html>
+
+
+
+
+
+
