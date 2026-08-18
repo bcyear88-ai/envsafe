@@ -437,7 +437,7 @@ A: 运行 `python backend/import_laws.py`，或通过系统界面手动录入。
 
 ## 许可证
 
-本项目为内部使用，暂未开源许可证。如需使用请联系作者。
+本项目基于 [MIT License](LICENSE) 开源。
 
 ---
 
